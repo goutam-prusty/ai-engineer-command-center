@@ -1,0 +1,497 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedOwner(userId) {
+      return isSignedIn()
+        && request.auth.uid == userId
+        && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string
+        && id.size() >= 1
+        && id.size() <= 128
+        && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidStringList(arr, maxLen) {
+      return arr is list
+        && arr.size() <= maxLen
+        && (arr.size() == 0 || (arr[0] is string && arr[0].size() <= 200));
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll([
+          'ownerId', 'learnerName', 'onboardingCompleted', 'currentWeek',
+          'weeklyLiveHours', 'weeklySelfStudyHours', 'weeklyPracticeHours',
+          'internshipIntakeDone', 'internshipMentoringHours',
+          'internshipCertificateDone', 'internshipExperienceLetterDone',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId', 'learnerName', 'onboardingCompleted', 'currentWeek',
+          'weeklyLiveHours', 'weeklySelfStudyHours', 'weeklyPracticeHours',
+          'internshipIntakeDone', 'internshipMentoringHours',
+          'internshipCertificateDone', 'internshipExperienceLetterDone',
+          'createdAt', 'updatedAt'
+        ])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.learnerName is string && data.learnerName.size() <= 100
+        && data.onboardingCompleted is bool
+        && data.currentWeek is int && data.currentWeek >= 1 && data.currentWeek <= 20
+        && data.weeklyLiveHours is number && data.weeklyLiveHours >= 0 && data.weeklyLiveHours <= 60
+        && data.weeklySelfStudyHours is number && data.weeklySelfStudyHours >= 0 && data.weeklySelfStudyHours <= 60
+        && data.weeklyPracticeHours is number && data.weeklyPracticeHours >= 0 && data.weeklyPracticeHours <= 60
+        && data.internshipIntakeDone is bool
+        && data.internshipMentoringHours is number && data.internshipMentoringHours >= 0 && data.internshipMentoringHours <= 200
+        && data.internshipCertificateDone is bool
+        && data.internshipExperienceLetterDone is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidTopicProgress(data, userId, topicId) {
+      return data.keys().hasAll([
+          'ownerId', 'topicId', 'week', 'status',
+          'assignmentStatus', 'revisionStatus', 'notes', 'evidenceUrl', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId', 'topicId', 'week', 'status',
+          'assignmentStatus', 'revisionStatus', 'notes', 'evidenceUrl', 'updatedAt'
+        ])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.topicId == topicId
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.status in ['not_started', 'in_progress', 'practised', 'demonstrated', 'needs_revision', 'complete']
+        && data.assignmentStatus in ['not_started', 'in_progress', 'submitted', 'reviewed']
+        && data.revisionStatus in ['none', 'scheduled', 'needs_revision', 'revised']
+        && data.notes is string && data.notes.size() <= 4000
+        && data.evidenceUrl is string && data.evidenceUrl.size() <= 500
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidBonusProgress(data, userId, moduleId) {
+      return data.keys().hasAll(['ownerId', 'moduleId', 'status', 'notes', 'updatedAt'])
+        && data.keys().hasOnly(['ownerId', 'moduleId', 'status', 'notes', 'updatedAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.moduleId == moduleId
+        && data.status in ['not_started', 'in_progress', 'complete']
+        && data.notes is string && data.notes.size() <= 2000
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidResourceState(data, userId, resourceId) {
+      return data.keys().hasAll(['ownerId', 'resourceId', 'watched', 'pinnedWeek', 'note', 'updatedAt'])
+        && data.keys().hasOnly(['ownerId', 'resourceId', 'watched', 'pinnedWeek', 'note', 'updatedAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.resourceId == resourceId
+        && data.watched is bool
+        && data.pinnedWeek is int && data.pinnedWeek >= 0 && data.pinnedWeek <= 20
+        && data.note is string && data.note.size() <= 1000
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidStudySession(data, userId) {
+      return data.keys().hasAll([
+          'ownerId', 'week', 'day', 'title', 'category',
+          'plannedMinutes', 'completed', 'linkedRef', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId', 'week', 'day', 'title', 'category',
+          'plannedMinutes', 'completed', 'linkedRef', 'createdAt', 'updatedAt'
+        ])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.category in ['live_class', 'self_study', 'practice', 'revision', 'supplementary']
+        && data.plannedMinutes is int && data.plannedMinutes >= 5 && data.plannedMinutes <= 600
+        && data.completed is bool
+        && data.linkedRef is string && data.linkedRef.size() <= 200
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidPracticeLog(data, userId, exerciseId) {
+      return data.keys().hasAll(['ownerId', 'exerciseId', 'week', 'status', 'evidenceUrl', 'notes', 'updatedAt'])
+        && data.keys().hasOnly(['ownerId', 'exerciseId', 'week', 'status', 'evidenceUrl', 'notes', 'updatedAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.exerciseId == exerciseId
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.status in ['not_started', 'in_progress', 'completed']
+        && data.evidenceUrl is string && data.evidenceUrl.size() <= 500
+        && data.notes is string && data.notes.size() <= 3000
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidProjectRecord(data, userId) {
+      return data.keys().hasAll([
+          'ownerId', 'category', 'title', 'competencyArea', 'problemStatement',
+          'skills', 'datasetSource', 'milestones', 'deliverables', 'githubUrl',
+          'completionCriteria', 'status', 'provenance', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId', 'category', 'title', 'competencyArea', 'problemStatement',
+          'skills', 'datasetSource', 'milestones', 'deliverables', 'githubUrl',
+          'completionCriteria', 'status', 'provenance', 'createdAt', 'updatedAt'
+        ])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.category in ['official_datamites', 'internship', 'supplementary_personal']
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.competencyArea is string && data.competencyArea.size() <= 120
+        && data.problemStatement is string && data.problemStatement.size() <= 2000
+        && isValidStringList(data.skills, 20)
+        && data.datasetSource is string && data.datasetSource.size() <= 300
+        && isValidStringList(data.milestones, 20)
+        && data.deliverables is string && data.deliverables.size() <= 1500
+        && data.githubUrl is string && data.githubUrl.size() <= 500
+        && data.completionCriteria is string && data.completionCriteria.size() <= 1500
+        && data.status in ['planned', 'in_progress', 'completed']
+        && data.provenance in ['DATAMITES_OFFICIAL', 'SUPPLEMENTARY_PRACTICE_PROPOSED', 'UNVERIFIED']
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidWeakConcept(data, userId) {
+      return data.keys().hasAll(['ownerId', 'week', 'topicId', 'title', 'notes', 'resolved', 'source', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['ownerId', 'week', 'topicId', 'title', 'notes', 'resolved', 'source', 'createdAt', 'updatedAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.topicId is string && data.topicId.size() <= 128
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.notes is string && data.notes.size() <= 2000
+        && data.resolved is bool
+        && data.source is string && data.source.size() <= 80
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidFlashcardState(data, userId, cardId) {
+      return data.keys().hasAll(['ownerId', 'cardId', 'status', 'reviewCount', 'updatedAt'])
+        && data.keys().hasOnly(['ownerId', 'cardId', 'status', 'reviewCount', 'updatedAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.cardId == cardId
+        && data.status in ['unreviewed', 'known', 'needs_review']
+        && data.reviewCount is int && data.reviewCount >= 0 && data.reviewCount <= 10000
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidQuizAttempt(data, userId) {
+      return data.keys().hasAll(['ownerId', 'week', 'score', 'total', 'missedTopicIds', 'createdAt'])
+        && data.keys().hasOnly(['ownerId', 'week', 'score', 'total', 'missedTopicIds', 'createdAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.score is int && data.score >= 0 && data.score <= 100
+        && data.total is int && data.total >= 1 && data.total <= 100
+        && data.score <= data.total
+        && isValidStringList(data.missedTopicIds, 50)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidJournalEntry(data, userId) {
+      return data.keys().hasAll([
+          'ownerId', 'date', 'week', 'learnedToday', 'implemented',
+          'problemsEncountered', 'howSolved', 'unclearConcepts',
+          'mentorQuestions', 'mentorResolved', 'nextSession',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId', 'date', 'week', 'learnedToday', 'implemented',
+          'problemsEncountered', 'howSolved', 'unclearConcepts',
+          'mentorQuestions', 'mentorResolved', 'nextSession',
+          'createdAt', 'updatedAt'
+        ])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.date is string && data.date.size() >= 4 && data.date.size() <= 32
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.learnedToday is string && data.learnedToday.size() <= 3000
+        && data.implemented is string && data.implemented.size() <= 3000
+        && data.problemsEncountered is string && data.problemsEncountered.size() <= 3000
+        && data.howSolved is string && data.howSolved.size() <= 3000
+        && data.unclearConcepts is string && data.unclearConcepts.size() <= 3000
+        && data.mentorQuestions is string && data.mentorQuestions.size() <= 3000
+        && data.mentorResolved is bool
+        && data.nextSession is string && data.nextSession.size() <= 2000
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidActivityLog(data, userId) {
+      return data.keys().hasAll(['ownerId', 'type', 'title', 'detail', 'week', 'createdAt'])
+        && data.keys().hasOnly(['ownerId', 'type', 'title', 'detail', 'week', 'createdAt'])
+        && data.ownerId == userId
+        && data.ownerId == request.auth.uid
+        && data.type in ['topic', 'practice', 'quiz', 'flashcard', 'project', 'journal', 'resource', 'plan']
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.detail is string && data.detail.size() <= 300
+        && data.week is int && data.week >= 1 && data.week <= 20
+        && data.createdAt is timestamp;
+    }
+
+    match /users/{userId} {
+      allow get: if isVerifiedOwner(userId) && isValidId(userId);
+      allow list: if false;
+      allow create: if isVerifiedOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isVerifiedOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'learnerName', 'onboardingCompleted', 'currentWeek',
+          'weeklyLiveHours', 'weeklySelfStudyHours', 'weeklyPracticeHours',
+          'internshipIntakeDone', 'internshipMentoringHours',
+          'internshipCertificateDone', 'internshipExperienceLetterDone',
+          'updatedAt'
+        ]);
+      allow delete: if isVerifiedOwner(userId) && isValidId(userId);
+
+      match /topicProgress/{topicId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(topicId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(topicId)
+          && isValidTopicProgress(incoming(), userId, topicId)
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(topicId)
+          && isValidTopicProgress(incoming(), userId, topicId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().topicId == existing().topicId
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'week', 'status', 'assignmentStatus', 'revisionStatus', 'notes', 'evidenceUrl', 'updatedAt'
+          ]);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(topicId);
+      }
+
+      match /bonusProgress/{moduleId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(moduleId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(moduleId)
+          && isValidBonusProgress(incoming(), userId, moduleId)
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(moduleId)
+          && isValidBonusProgress(incoming(), userId, moduleId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().moduleId == existing().moduleId
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'notes', 'updatedAt']);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(moduleId);
+      }
+
+      match /resourceStates/{resourceId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(resourceId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(resourceId)
+          && isValidResourceState(incoming(), userId, resourceId)
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(resourceId)
+          && isValidResourceState(incoming(), userId, resourceId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().resourceId == existing().resourceId
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly(['watched', 'pinnedWeek', 'note', 'updatedAt']);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(resourceId);
+      }
+
+      match /studySessions/{sessionId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(sessionId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(sessionId)
+          && isValidStudySession(incoming(), userId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(sessionId)
+          && isValidStudySession(incoming(), userId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'week', 'day', 'title', 'category', 'plannedMinutes', 'completed', 'linkedRef', 'updatedAt'
+          ]);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(sessionId);
+      }
+
+      match /practiceLogs/{exerciseId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(exerciseId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(exerciseId)
+          && isValidPracticeLog(incoming(), userId, exerciseId)
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(exerciseId)
+          && isValidPracticeLog(incoming(), userId, exerciseId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().exerciseId == existing().exerciseId
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly(['week', 'status', 'evidenceUrl', 'notes', 'updatedAt']);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(exerciseId);
+      }
+
+      match /projects/{projectId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(projectId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(projectId)
+          && isValidProjectRecord(incoming(), userId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(projectId)
+          && isValidProjectRecord(incoming(), userId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'category', 'title', 'competencyArea', 'problemStatement', 'skills',
+            'datasetSource', 'milestones', 'deliverables', 'githubUrl',
+            'completionCriteria', 'status', 'provenance', 'updatedAt'
+          ]);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(projectId);
+      }
+
+      match /weakConcepts/{conceptId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(conceptId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(conceptId)
+          && isValidWeakConcept(incoming(), userId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(conceptId)
+          && isValidWeakConcept(incoming(), userId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'week', 'topicId', 'title', 'notes', 'resolved', 'source', 'updatedAt'
+          ]);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(conceptId);
+      }
+
+      match /flashcardStates/{cardId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(cardId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(cardId)
+          && isValidFlashcardState(incoming(), userId, cardId)
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(cardId)
+          && isValidFlashcardState(incoming(), userId, cardId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().cardId == existing().cardId
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'reviewCount', 'updatedAt']);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(cardId);
+      }
+
+      match /quizAttempts/{attemptId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(attemptId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(attemptId)
+          && isValidQuizAttempt(incoming(), userId)
+          && incoming().createdAt == request.time;
+        allow update: if false;
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(attemptId);
+      }
+
+      match /journalEntries/{entryId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(entryId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidJournalEntry(incoming(), userId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time;
+        allow update: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(entryId)
+          && isValidJournalEntry(incoming(), userId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'date', 'week', 'learnedToday', 'implemented', 'problemsEncountered',
+            'howSolved', 'unclearConcepts', 'mentorQuestions', 'mentorResolved',
+            'nextSession', 'updatedAt'
+          ]);
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(entryId);
+      }
+
+      match /activityLogs/{logId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(logId);
+        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId)
+          && isValidId(userId)
+          && isValidId(logId)
+          && isValidActivityLog(incoming(), userId)
+          && incoming().createdAt == request.time;
+        allow update: if false;
+        allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(logId);
+      }
+    }
+  }
+}

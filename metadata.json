@@ -1,0 +1,8 @@
+{
+  "name": "AI Engineer Command Center",
+  "description": "Personal AI Engineering learning command center anchored to the official 20-week DataMites AI Engineer curriculum, with verified CodeWithHarry and SSD resource mapping, hands-on competency tracking, flashcards, quizzes, projects, journal, and hybrid Firebase + local persistence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
