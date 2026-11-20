@@ -25,6 +25,11 @@ export function SettingsView() {
     handleGoogleSignIn,
     handleSignOut,
     syncNow,
+    cloudConfigured,
+    missingFirebaseEnv,
+    pendingSyncCount,
+    localBackups,
+    downloadLocalBackup,
     exportBackupJson,
     importBackupJson,
     resetAllProgress,
@@ -215,14 +220,25 @@ export function SettingsView() {
                   ? 'Synced with Firebase'
                   : syncStatus === 'syncing'
                     ? 'Syncing...'
-                    : syncStatus === 'error'
-                      ? 'Cloud sync paused (local fallback active)'
-                      : 'Saving locally'}
+                    : syncStatus === 'offline'
+                      ? 'Offline (changes are saved here and will sync when you reconnect)'
+                      : syncStatus === 'error'
+                        ? 'Cloud sync paused (local fallback active)'
+                        : 'Saving locally'}
               </span>
               {lastSyncedAt && (
                 <> · Last synced {new Date(lastSyncedAt).toLocaleTimeString()}</>
               )}
+              {user && pendingSyncCount > 0 && (
+                <> · {pendingSyncCount} change{pendingSyncCount === 1 ? '' : 's'} sending</>
+              )}
             </p>
+            {!cloudConfigured && (
+              <p className="text-[#B45309]">
+                Cloud sync is not configured for this deployment (missing{' '}
+                {missingFirebaseEnv.join(', ')}). Your progress is saved on this device only.
+              </p>
+            )}
             {syncError && <p className="text-[#B45309]">{syncError}</p>}
           </div>
 
@@ -249,8 +265,9 @@ export function SettingsView() {
             ) : (
               <button
                 type="button"
+                disabled={!cloudConfigured}
                 onClick={() => void handleGoogleSignIn()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-medium cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>Sign in with Google</span>
@@ -303,6 +320,35 @@ export function SettingsView() {
         </div>
 
         {importError && <p className="text-xs text-[#DC2626]">{importError}</p>}
+
+        {localBackups.length > 0 && (
+          <div className="pt-3 border-t border-[#E2E8F0] space-y-2">
+            <p className="text-xs font-semibold text-[#0F172A]">Automatic safety backups on this device</p>
+            <p className="text-xs text-[#64748B]">
+              A copy of your local data is saved automatically before it is first merged into a
+              Google account, so nothing is lost if a merge is not what you expected.
+            </p>
+            <ul className="space-y-1.5">
+              {localBackups.map((b) => (
+                <li key={b.key} className="flex items-center justify-between gap-3 text-xs text-[#475569]">
+                  <span className="truncate">
+                    {new Date(b.createdAt).toLocaleString()} ·{' '}
+                    {b.reason === 'otheraccount' ? 'data from another account' : 'before first sync'} ·{' '}
+                    {Math.max(1, Math.round(b.bytes / 1024))} KB
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => downloadLocalBackup(b.key)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[11px] font-medium text-[#0F172A] cursor-pointer shrink-0"
+                  >
+                    <Download className="w-3 h-3 text-[#2563EB]" />
+                    <span>Download</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </SectionCard>
 
       {/* In-App Confirmation Modal for Reset (No window.confirm) */}
@@ -316,9 +362,12 @@ export function SettingsView() {
                   Reset all learning progress?
                 </h3>
                 <p className="text-xs text-[#475569] mt-1 leading-relaxed">
-                  This clears all locally stored topic statuses, study sessions, flashcards,
-                  quizzes, projects, and journal entries, and re-opens onboarding. Export a JSON
-                  backup first if you want to keep a copy.
+                  This clears all topic statuses, study sessions, flashcards, quizzes, projects, and
+                  journal entries and re-opens onboarding.{' '}
+                  {user
+                    ? 'You are signed in, so your cloud copy is deleted too and other devices will reset as well.'
+                    : 'Only this device is affected while you are signed out.'}{' '}
+                  Export a JSON backup first if you want to keep a copy.
                 </p>
               </div>
             </div>

@@ -134,9 +134,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {user
                   ? syncStatus === 'syncing'
                     ? 'Syncing cloud...'
-                    : syncStatus === 'error'
-                      ? 'Sync issue (local saved)'
-                      : 'Cloud synced'
+                    : syncStatus === 'offline'
+                      ? 'Offline (saved locally)'
+                      : syncStatus === 'error'
+                        ? 'Sync issue (local saved)'
+                        : 'Cloud synced'
                   : 'Local storage active'}
               </span>
             </span>

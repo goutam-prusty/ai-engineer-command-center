@@ -32,6 +32,14 @@ service cloud.firestore {
       return resource.data;
     }
 
+    // Edit times are written by the client so offline edits keep their real order.
+    // They must be real timestamps, after 2020, and at most 1 hour ahead of server time.
+    function isPlausibleTime(t) {
+      return t is timestamp
+        && t >= timestamp.date(2020, 1, 1)
+        && t <= request.time + duration.value(1, 'h');
+    }
+
     function isValidStringList(arr, maxLen) {
       return arr is list
         && arr.size() <= maxLen
@@ -263,14 +271,15 @@ service cloud.firestore {
       allow create: if isVerifiedOwner(userId)
         && isValidId(userId)
         && isValidUserProfile(incoming(), userId)
-        && incoming().createdAt == request.time
-        && incoming().updatedAt == request.time;
+        && isPlausibleTime(incoming().createdAt)
+        && isPlausibleTime(incoming().updatedAt);
       allow update: if isVerifiedOwner(userId)
         && isValidId(userId)
         && isValidUserProfile(incoming(), userId)
         && incoming().ownerId == existing().ownerId
         && incoming().createdAt == existing().createdAt
-        && incoming().updatedAt == request.time
+        && isPlausibleTime(incoming().updatedAt)
+        && incoming().updatedAt >= existing().updatedAt
         && incoming().diff(existing()).affectedKeys().hasOnly([
           'learnerName', 'onboardingCompleted', 'currentWeek',
           'weeklyLiveHours', 'weeklySelfStudyHours', 'weeklyPracticeHours',
@@ -282,19 +291,20 @@ service cloud.firestore {
 
       match /topicProgress/{topicId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(topicId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(topicId)
           && isValidTopicProgress(incoming(), userId, topicId)
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(topicId)
           && isValidTopicProgress(incoming(), userId, topicId)
           && incoming().ownerId == existing().ownerId
           && incoming().topicId == existing().topicId
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly([
             'week', 'status', 'assignmentStatus', 'revisionStatus', 'notes', 'evidenceUrl', 'updatedAt'
           ]);
@@ -303,58 +313,61 @@ service cloud.firestore {
 
       match /bonusProgress/{moduleId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(moduleId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(moduleId)
           && isValidBonusProgress(incoming(), userId, moduleId)
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(moduleId)
           && isValidBonusProgress(incoming(), userId, moduleId)
           && incoming().ownerId == existing().ownerId
           && incoming().moduleId == existing().moduleId
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'notes', 'updatedAt']);
         allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(moduleId);
       }
 
       match /resourceStates/{resourceId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(resourceId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(resourceId)
           && isValidResourceState(incoming(), userId, resourceId)
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(resourceId)
           && isValidResourceState(incoming(), userId, resourceId)
           && incoming().ownerId == existing().ownerId
           && incoming().resourceId == existing().resourceId
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly(['watched', 'pinnedWeek', 'note', 'updatedAt']);
         allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(resourceId);
       }
 
       match /studySessions/{sessionId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(sessionId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(sessionId)
           && isValidStudySession(incoming(), userId)
-          && incoming().createdAt == request.time
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().createdAt)
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(sessionId)
           && isValidStudySession(incoming(), userId)
           && incoming().ownerId == existing().ownerId
           && incoming().createdAt == existing().createdAt
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly([
             'week', 'day', 'title', 'category', 'plannedMinutes', 'completed', 'linkedRef', 'updatedAt'
           ]);
@@ -363,39 +376,41 @@ service cloud.firestore {
 
       match /practiceLogs/{exerciseId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(exerciseId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(exerciseId)
           && isValidPracticeLog(incoming(), userId, exerciseId)
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(exerciseId)
           && isValidPracticeLog(incoming(), userId, exerciseId)
           && incoming().ownerId == existing().ownerId
           && incoming().exerciseId == existing().exerciseId
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly(['week', 'status', 'evidenceUrl', 'notes', 'updatedAt']);
         allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(exerciseId);
       }
 
       match /projects/{projectId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(projectId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(projectId)
           && isValidProjectRecord(incoming(), userId)
-          && incoming().createdAt == request.time
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().createdAt)
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(projectId)
           && isValidProjectRecord(incoming(), userId)
           && incoming().ownerId == existing().ownerId
           && incoming().createdAt == existing().createdAt
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly([
             'category', 'title', 'competencyArea', 'problemStatement', 'skills',
             'datasetSource', 'milestones', 'deliverables', 'githubUrl',
@@ -406,20 +421,21 @@ service cloud.firestore {
 
       match /weakConcepts/{conceptId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(conceptId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(conceptId)
           && isValidWeakConcept(incoming(), userId)
-          && incoming().createdAt == request.time
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().createdAt)
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(conceptId)
           && isValidWeakConcept(incoming(), userId)
           && incoming().ownerId == existing().ownerId
           && incoming().createdAt == existing().createdAt
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly([
             'week', 'topicId', 'title', 'notes', 'resolved', 'source', 'updatedAt'
           ]);
@@ -428,51 +444,53 @@ service cloud.firestore {
 
       match /flashcardStates/{cardId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(cardId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(cardId)
           && isValidFlashcardState(incoming(), userId, cardId)
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(cardId)
           && isValidFlashcardState(incoming(), userId, cardId)
           && incoming().ownerId == existing().ownerId
           && incoming().cardId == existing().cardId
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'reviewCount', 'updatedAt']);
         allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(cardId);
       }
 
       match /quizAttempts/{attemptId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(attemptId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(attemptId)
           && isValidQuizAttempt(incoming(), userId)
-          && incoming().createdAt == request.time;
+          && isPlausibleTime(incoming().createdAt);
         allow update: if false;
         allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(attemptId);
       }
 
       match /journalEntries/{entryId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(entryId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(entryId)
           && isValidJournalEntry(incoming(), userId)
-          && incoming().createdAt == request.time
-          && incoming().updatedAt == request.time;
+          && isPlausibleTime(incoming().createdAt)
+          && isPlausibleTime(incoming().updatedAt);
         allow update: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(entryId)
           && isValidJournalEntry(incoming(), userId)
           && incoming().ownerId == existing().ownerId
           && incoming().createdAt == existing().createdAt
-          && incoming().updatedAt == request.time
+          && isPlausibleTime(incoming().updatedAt)
+          && incoming().updatedAt >= existing().updatedAt
           && incoming().diff(existing()).affectedKeys().hasOnly([
             'date', 'week', 'learnedToday', 'implemented', 'problemsEncountered',
             'howSolved', 'unclearConcepts', 'mentorQuestions', 'mentorResolved',
@@ -483,12 +501,12 @@ service cloud.firestore {
 
       match /activityLogs/{logId} {
         allow get: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(logId);
-        allow list: if isVerifiedOwner(userId) && resource.data.ownerId == request.auth.uid;
+        allow list: if isVerifiedOwner(userId) && isValidId(userId);
         allow create: if isVerifiedOwner(userId)
           && isValidId(userId)
           && isValidId(logId)
           && isValidActivityLog(incoming(), userId)
-          && incoming().createdAt == request.time;
+          && isPlausibleTime(incoming().createdAt);
         allow update: if false;
         allow delete: if isVerifiedOwner(userId) && isValidId(userId) && isValidId(logId);
       }
