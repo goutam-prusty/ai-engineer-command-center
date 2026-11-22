@@ -23,13 +23,14 @@ import { ALL_RESOURCES } from '../data/resources';
 import { FLASHCARDS, PRACTICAL_EXERCISES } from '../data/assessments';
 import { ProgressBar, SectionCard } from '../components/StatusPrimitives';
 
+// Paper & Signal palette for status breakdown
 const STATUS_COLORS: Record<string, string> = {
-  Complete: '#059669',
-  Demonstrated: '#10B981',
-  Practised: '#3B82F6',
-  'In progress': '#60A5FA',
-  'Needs revision': '#F59E0B',
-  'Not started': '#CBD5E1',
+  Complete: '#17191a',       // ink
+  Demonstrated: '#4a4f4c',   // secondary
+  Practised: '#827d71',      // line
+  'In progress': '#d3f03c',  // signal lime
+  'Needs revision': '#ddd8cb', // line-soft
+  'Not started': '#efebdf',  // sunken
 };
 
 export function AnalyticsView() {
@@ -141,8 +142,10 @@ export function AnalyticsView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-[#0F172A] tracking-tight">Progress Analytics</h1>
-        <p className="text-sm text-[#64748B] mt-1">
+        <h1 className="text-2xl sm:text-3xl font-display font-medium text-[var(--color-ink)] tracking-tight">
+          Progress Analytics
+        </h1>
+        <p className="text-sm text-[var(--color-secondary)] mt-1 max-w-3xl">
           Genuine learning metrics. Official 20-week DataMites mastery is tracked independently from
           supplementary video watching and optional Bonus Courses.
         </p>
@@ -150,54 +153,54 @@ export function AnalyticsView() {
 
       {/* Strict Separation Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <SectionCard className="p-5 space-y-2">
-          <p className="text-xs font-medium text-[#64748B]">Official Core Curriculum</p>
-          <p className="text-2xl font-semibold text-[#0F172A] tabular-nums">
+        <SectionCard className="p-4 sm:p-5 border border-[var(--color-line)] border-t-2 border-t-[var(--color-ink)] bg-[var(--color-surface)] space-y-2">
+          <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-secondary)]">Official Core Curriculum</p>
+          <p className="text-2xl sm:text-3xl font-display font-bold text-[var(--color-ink)] tabular-nums">
             {allSubtopics.length > 0 ? Math.round((officialMastered / allSubtopics.length) * 100) : 0}%
           </p>
-          <ProgressBar value={officialMastered} max={allSubtopics.length} colorClass="bg-[#2563EB]" />
-          <p className="text-[11px] text-[#64748B] tabular-nums">
+          <ProgressBar value={officialMastered} max={allSubtopics.length} colorClass="bg-[var(--color-ink)]" />
+          <p className="text-[11px] font-mono text-[var(--color-secondary)] tabular-nums">
             {officialMastered} / {allSubtopics.length} core subtopics Demonstrated or Complete
           </p>
         </SectionCard>
 
-        <SectionCard className="p-5 space-y-2">
-          <p className="text-xs font-medium text-[#64748B]">Supplementary Videos Watched</p>
-          <p className="text-2xl font-semibold text-[#0F172A] tabular-nums">
+        <SectionCard className="p-4 sm:p-5 border border-[var(--color-line)] border-t-2 border-t-[var(--color-ink)] bg-[var(--color-surface)] space-y-2">
+          <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-secondary)]">Supplementary Videos Watched</p>
+          <p className="text-2xl sm:text-3xl font-display font-bold text-[var(--color-ink)] tabular-nums">
             {watchedResourcesCount}
           </p>
           <ProgressBar
             value={watchedResourcesCount}
             max={ALL_RESOURCES.length}
-            colorClass="bg-[#0EA5E9]"
+            colorClass="bg-[var(--color-ink)]"
           />
-          <p className="text-[11px] text-[#64748B]">
+          <p className="text-[11px] font-mono text-[var(--color-secondary)]">
             Tracked separately · never inflates official mastery
           </p>
         </SectionCard>
 
-        <SectionCard className="p-5 space-y-2">
-          <p className="text-xs font-medium text-[#64748B]">Practical Exercises &amp; Recall</p>
-          <p className="text-2xl font-semibold text-[#0F172A] tabular-nums">
+        <SectionCard className="p-4 sm:p-5 border border-[var(--color-line)] border-t-2 border-t-[var(--color-ink)] bg-[var(--color-surface)] space-y-2">
+          <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-secondary)]">Practical Exercises &amp; Recall</p>
+          <p className="text-2xl sm:text-3xl font-display font-bold text-[var(--color-ink)] tabular-nums">
             {exercisesDone} / {PRACTICAL_EXERCISES.length}
           </p>
           <ProgressBar
             value={exercisesDone}
             max={PRACTICAL_EXERCISES.length}
-            colorClass="bg-[#059669]"
+            colorClass="bg-[var(--color-ink)]"
           />
-          <p className="text-[11px] text-[#64748B] tabular-nums">
+          <p className="text-[11px] font-mono text-[var(--color-secondary)] tabular-nums">
             Flashcards known: {flashcardsKnown} / {FLASHCARDS.length}
           </p>
         </SectionCard>
 
-        <SectionCard className="p-5 space-y-2">
-          <p className="text-xs font-medium text-[#64748B]">Bonus Courses (Optional)</p>
-          <p className="text-2xl font-semibold text-[#0F172A] tabular-nums">
+        <SectionCard className="p-4 sm:p-5 border border-[var(--color-line)] border-t-2 border-t-[var(--color-ink)] bg-[var(--color-surface)] space-y-2">
+          <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-secondary)]">Bonus Courses (Optional)</p>
+          <p className="text-2xl sm:text-3xl font-display font-bold text-[var(--color-ink)] tabular-nums">
             {bonusDone} / {bonusModules.length}
           </p>
-          <ProgressBar value={bonusDone} max={bonusModules.length} colorClass="bg-[#64748B]" />
-          <p className="text-[11px] text-[#64748B]">
+          <ProgressBar value={bonusDone} max={bonusModules.length} colorClass="bg-[var(--color-ink)]" />
+          <p className="text-[11px] font-mono text-[var(--color-secondary)]">
             Isolated from core 20-week DataMites progress
           </p>
         </SectionCard>
@@ -205,45 +208,58 @@ export function AnalyticsView() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <SectionCard className="lg:col-span-7 p-5 space-y-4">
+        <SectionCard className="lg:col-span-7 p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
           <div>
-            <h2 className="text-base font-semibold text-[#0F172A]">
+            <h2 className="text-base font-display font-semibold text-[var(--color-ink)]">
               Official Curriculum Completion by Course Block
             </h2>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-[var(--color-secondary)] font-mono">
               Percentage of subtopics marked Demonstrated or Complete across Weeks 1–20
             </p>
           </div>
           <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={courseProgressData} margin={{ top: 8, right: 8, left: -18, bottom: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#64748B' }} />
-                <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#64748B' }} unit="%" />
+              <BarChart data={courseProgressData} margin={{ top: 8, right: 8, left: -20, bottom: 24 }}>
+                <CartesianGrid strokeDasharray="2 2" stroke="#ddd8cb" vertical={false} />
+                <XAxis
+                  dataKey="label"
+                  interval={0}
+                  angle={-30}
+                  textAnchor="end"
+                  height={36}
+                  tick={{ fontSize: 10, fill: '#4a4f4c', fontFamily: 'Cascadia Code, monospace' }}
+                />
+                <YAxis
+                  domain={[0, 100]}
+                  unit="%"
+                  tick={{ fontSize: 10, fill: '#4a4f4c', fontFamily: 'Cascadia Code, monospace' }}
+                />
                 <Tooltip
                   formatter={(value, _name, item) => [
                     `${value ?? 0}% (${item?.payload?.done ?? 0}/${item?.payload?.total ?? 0})`,
                     String(item?.payload?.courseTitle ?? 'Course'),
                   ]}
                   contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: 8,
-                    fontSize: 12,
+                    backgroundColor: '#fdfcf8',
+                    borderColor: '#827d71',
+                    borderRadius: 0,
+                    fontSize: 11,
+                    fontFamily: 'Cascadia Code, monospace',
+                    color: '#17191a',
                   }}
                 />
-                <Bar dataKey="pct" fill="#2563EB" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="pct" fill="#17191a" radius={[0, 0, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </SectionCard>
 
-        <SectionCard className="lg:col-span-5 p-5 space-y-4">
+        <SectionCard className="lg:col-span-5 p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
           <div>
-            <h2 className="text-base font-semibold text-[#0F172A]">
+            <h2 className="text-base font-display font-semibold text-[var(--color-ink)]">
               Official Topic Mastery Breakdown
             </h2>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-[var(--color-secondary)] font-mono">
               Distribution across all {allSubtopics.length} core syllabus subtopics
             </p>
           </div>
@@ -258,36 +274,43 @@ export function AnalyticsView() {
                   cy="50%"
                   innerRadius={52}
                   outerRadius={84}
-                  paddingAngle={2}
+                  paddingAngle={1}
                 >
                   {masteryBreakdown
                     .filter((d) => d.value > 0)
                     .map((entry) => (
-                      <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? '#94A3B8'} />
+                      <Cell
+                        key={entry.name}
+                        fill={STATUS_COLORS[entry.name] ?? '#efebdf'}
+                        stroke="#827d71"
+                        strokeWidth={0.5}
+                      />
                     ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2E8F0',
-                    borderRadius: 8,
-                    fontSize: 12,
+                    backgroundColor: '#fdfcf8',
+                    borderColor: '#827d71',
+                    borderRadius: 0,
+                    fontSize: 11,
+                    fontFamily: 'Cascadia Code, monospace',
+                    color: '#17191a',
                   }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono">
             {masteryBreakdown.map((item) => (
-              <div key={item.name} className="flex items-center justify-between gap-2">
+              <div key={item.name} className="flex items-center justify-between gap-2 p-1 border border-[var(--color-line-soft)] bg-[var(--color-surface)]">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <span
-                    className="w-2.5 h-2.5 rounded-sm shrink-0"
+                    className="w-2.5 h-2.5 shrink-0 border border-[var(--color-line)]"
                     style={{ backgroundColor: STATUS_COLORS[item.name] }}
                   />
-                  <span className="text-[#475569] truncate">{item.name}</span>
+                  <span className="text-[var(--color-secondary)] truncate">{item.name}</span>
                 </div>
-                <span className="font-semibold text-[#0F172A] tabular-nums">{item.value}</span>
+                <span className="font-semibold text-[var(--color-ink)] tabular-nums">{item.value}</span>
               </div>
             ))}
           </div>
@@ -296,67 +319,81 @@ export function AnalyticsView() {
 
       {/* Bottom Row: Quiz Trend + Official Projects & Competencies */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <SectionCard className="lg:col-span-6 p-5 space-y-4">
+        <SectionCard className="lg:col-span-6 p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
           <div>
-            <h2 className="text-base font-semibold text-[#0F172A]">Recent Quiz Scores</h2>
-            <p className="text-xs text-[#64748B]">
+            <h2 className="text-base font-display font-semibold text-[var(--color-ink)]">Recent Quiz Scores</h2>
+            <p className="text-xs text-[var(--color-secondary)] font-mono">
               Offline assessment percentages from Revision &amp; Assessments
             </p>
           </div>
           {quizChartData.length === 0 ? (
-            <div className="h-[200px] flex items-center justify-center text-xs text-[#64748B]">
+            <div className="h-[200px] flex items-center justify-center text-xs font-mono text-[var(--color-secondary)] border border-dashed border-[var(--color-line-soft)] bg-[var(--color-sunken)]/30">
               Take a weekly quiz in Revision &amp; Assessments to chart your recall accuracy.
             </div>
           ) : (
             <div className="h-[200px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={quizChartData} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748B' }} />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#64748B' }} unit="%" />
+                <BarChart data={quizChartData} margin={{ top: 8, right: 8, left: -20, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="2 2" stroke="#ddd8cb" vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    angle={-25}
+                    textAnchor="end"
+                    height={32}
+                    tick={{ fontSize: 10, fill: '#4a4f4c', fontFamily: 'Cascadia Code, monospace' }}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    unit="%"
+                    tick={{ fontSize: 10, fill: '#4a4f4c', fontFamily: 'Cascadia Code, monospace' }}
+                  />
                   <Tooltip
                     formatter={(v) => [`${v ?? 0}%`, 'Quiz Score']}
                     contentStyle={{
-                      backgroundColor: '#FFFFFF',
-                      borderColor: '#E2E8F0',
-                      borderRadius: 8,
-                      fontSize: 12,
+                      backgroundColor: '#fdfcf8',
+                      borderColor: '#827d71',
+                      borderRadius: 0,
+                      fontSize: 11,
+                      fontFamily: 'Cascadia Code, monospace',
+                      color: '#17191a',
                     }}
                   />
-                  <Bar dataKey="pct" fill="#059669" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="pct" fill="#d3f03c" stroke="#17191a" strokeWidth={1} radius={[0, 0, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           )}
         </SectionCard>
 
-        <SectionCard className="lg:col-span-6 p-5 space-y-4">
+        <SectionCard className="lg:col-span-6 p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold text-[#0F172A]">
+              <h2 className="text-base font-display font-semibold text-[var(--color-ink)]">
                 Projects &amp; Competency Coverage
               </h2>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-xs text-[var(--color-secondary)] font-mono">
                 Official milestone: {officialProjectsDone} /{' '}
                 {DATAMITES_PROGRAM_FACTS.minimumOfficialProjects} completed ·{' '}
                 {demonstratedAreas.size} / 8 competency areas verified
               </p>
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {OFFICIAL_COMPETENCY_AREAS.map((area) => {
               const verified = demonstratedAreas.has(area.title);
               return (
                 <div
                   key={area.id}
-                  className="flex items-center justify-between text-xs py-1.5 border-b border-[#F1F5F9] last:border-none"
+                  className="flex items-center justify-between text-xs py-2 px-2 border-b border-[var(--color-line-soft)] last:border-none"
                 >
-                  <span className="text-[#334155]">
-                    {area.number}. {area.title}
+                  <span className="text-[var(--color-ink)] font-body break-words pr-2">
+                    <span className="font-mono text-[var(--color-secondary)]">{area.number}.</span> {area.title}
                   </span>
                   <span
-                    className={`font-medium ${
-                      verified ? 'text-[#047857]' : 'text-[#94A3B8]'
+                    className={`font-mono text-[11px] px-2 py-0.5 border whitespace-nowrap shrink-0 ${
+                      verified
+                        ? 'border-[var(--color-ink)] bg-[var(--color-sunken)] text-[var(--color-ink)] font-bold'
+                        : 'border-[var(--color-line-soft)] bg-[var(--color-surface)] text-[var(--color-secondary)]'
                     }`}
                   >
                     {verified ? 'Demonstrated' : 'Pending'}
