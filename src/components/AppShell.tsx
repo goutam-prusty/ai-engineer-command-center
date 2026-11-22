@@ -158,7 +158,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
             {user && syncStatus === 'synced' ? (
               <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold text-[var(--color-ink)] shrink-0 ml-1.5">
-                <span className="w-2 h-2 rounded-full bg-[var(--color-signal)] border border-[var(--color-ink)]" />
+                <span className="w-2 h-2 rounded-none bg-[var(--color-signal)] border border-[var(--color-ink)]" />
                 Live
               </span>
             ) : (
@@ -174,7 +174,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {drawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div
-            className="fixed inset-0 bg-[#17191A]/40 transition-opacity"
+            className="fixed inset-0 bg-[var(--color-ink)]/40 transition-opacity"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
@@ -273,7 +273,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Cloud className="w-3.5 h-3.5 text-[var(--color-ink)]" />
                   <span className="hidden sm:inline max-w-[140px] truncate">{user.displayName || user.email}</span>
                   <span className="sm:hidden">Synced</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-signal)] border border-[var(--color-ink)]" />
+                  <span className="w-1.5 h-1.5 rounded-none bg-[var(--color-signal)] border border-[var(--color-ink)]" />
                 </>
               ) : (
                 <>

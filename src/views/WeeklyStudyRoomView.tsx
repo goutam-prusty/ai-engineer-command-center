@@ -571,7 +571,7 @@ export function WeeklyStudyRoomView() {
                 </div>
 
                 {detailsOpen && ex.starterCode && (
-                  <pre className="p-3 bg-[#0F172A] text-[#F8FAFC] text-xs font-mono overflow-x-auto leading-relaxed border border-[var(--color-line)]">
+                  <pre className="p-3 bg-[var(--color-ink)] text-[var(--color-surface)] text-xs font-mono overflow-x-auto leading-relaxed border border-[var(--color-line)]">
                     <code>{ex.starterCode}</code>
                   </pre>
                 )}

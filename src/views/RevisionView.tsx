@@ -577,10 +577,10 @@ export function RevisionView() {
         <div className="space-y-4">
           <SectionCard className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-[#0F172A]">
+              <h2 className="text-base font-serif font-bold text-[var(--color-ink)]">
                 Offline Concept Quiz · Week {quizWeek}
               </h2>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-xs font-mono text-[var(--color-secondary)] mt-0.5">
                 {getCourseForWeek(quizWeek).title} ({weekQuizzes.length} questions)
               </p>
             </div>
@@ -593,7 +593,7 @@ export function RevisionView() {
                   setQuizSelections({});
                   setQuizSubmitted(false);
                 }}
-                className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+                className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)]"
               >
                 {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
                   <option key={w} value={w}>
@@ -608,7 +608,7 @@ export function RevisionView() {
                     setQuizSelections({});
                     setQuizSubmitted(false);
                   }}
-                  className="px-3 py-2 rounded-lg border border-[#E2E8F0] text-xs font-medium text-[#334155] hover:bg-[#F8FAFC] cursor-pointer"
+                  className="min-h-[44px] px-3.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono font-bold text-[var(--color-ink)] cursor-pointer"
                 >
                   Retake
                 </button>
@@ -617,13 +617,13 @@ export function RevisionView() {
           </SectionCard>
 
           {quizResult && (
-            <SectionCard className="p-4 bg-[#EFF6FF] border-[#BFDBFE] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <SectionCard className="p-4 bg-[var(--color-sunken)] border border-[var(--color-line)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-semibold text-[#0F172A] tabular-nums">
+                <p className="text-sm font-mono font-bold text-[var(--color-ink)] tabular-nums">
                   Score: {quizResult.score} / {quizResult.total} (
                   {Math.round((quizResult.score / Math.max(1, quizResult.total)) * 100)}%)
                 </p>
-                <p className="text-xs text-[#334155]">
+                <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                   Attempt recorded in your Revision History and Analytics.
                 </p>
               </div>
@@ -641,7 +641,7 @@ export function RevisionView() {
                       })
                     );
                   }}
-                  className="px-3.5 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-medium whitespace-nowrap shrink-0 cursor-pointer"
+                  className="min-h-[44px] px-3.5 py-2 border border-[var(--color-ink)] bg-[var(--color-signal)] text-[var(--color-ink)] text-xs font-mono font-bold hover:brightness-95 whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   Add {quizResult.missed.length} Missed to Weak Concepts
                 </button>
@@ -654,28 +654,30 @@ export function RevisionView() {
               const chosen = quizSelections[q.id];
               return (
                 <SectionCard key={q.id} className="p-5 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-[#64748B]">
-                    <span className="font-semibold text-[#2563EB]">
+                  <div className="flex items-center justify-between text-xs font-mono text-[var(--color-secondary)]">
+                    <span className="font-bold text-[var(--color-ink)]">
                       Question {idx + 1} · {q.topicLabel}
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-[#0F172A]">{q.question}</p>
+                  <p className="text-sm font-medium text-[var(--color-ink)]">{q.question}</p>
                   <div className="space-y-2">
                     {q.options.map((opt, optIdx) => {
                       const isSelected = chosen === optIdx;
                       const isCorrect = q.correctIndex === optIdx;
                       let optionClasses =
-                        'border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[#334155]';
+                        'border-[var(--color-line-soft)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-[var(--color-ink)]';
                       if (quizSubmitted) {
                         if (isCorrect) {
                           optionClasses =
-                            'border-[#A7F3D0] bg-[#ECFDF5] text-[#047857] font-medium';
+                            'border-2 border-[var(--color-ink)] bg-[var(--color-surface)] text-[var(--color-ink)] font-bold';
                         } else if (isSelected && !isCorrect) {
-                          optionClasses = 'border-[#FECACA] bg-[#FEF2F2] text-[#B91C1C]';
+                          optionClasses = 'border border-[var(--color-line)] bg-[var(--color-sunken)] text-[var(--color-secondary)] line-through';
+                        } else {
+                          optionClasses = 'border border-[var(--color-line-soft)] bg-[var(--color-surface)] text-[var(--color-secondary)] opacity-60';
                         }
                       } else if (isSelected) {
                         optionClasses =
-                          'border-[#2563EB] bg-[#EFF6FF] text-[#1D4ED8] font-medium';
+                          'border-2 border-[var(--color-ink)] bg-[var(--color-sunken)] text-[var(--color-ink)] font-bold';
                       }
 
                       return (
@@ -686,7 +688,7 @@ export function RevisionView() {
                           onClick={() =>
                             setQuizSelections((prev) => ({ ...prev, [q.id]: optIdx }))
                           }
-                          className={`w-full text-left px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm transition-colors cursor-pointer ${optionClasses}`}
+                          className={`min-h-[44px] w-full text-left px-3.5 py-2.5 border text-xs sm:text-sm font-mono transition-colors cursor-pointer ${optionClasses}`}
                         >
                           {opt}
                         </button>
@@ -694,8 +696,8 @@ export function RevisionView() {
                     })}
                   </div>
                   {quizSubmitted && (
-                    <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#334155]">
-                      <span className="font-semibold text-[#0F172A]">Explanation:</span>{' '}
+                    <div className="p-3 bg-[var(--color-sunken)]/50 border border-[var(--color-line-soft)] text-xs text-[var(--color-secondary)]">
+                      <span className="font-mono font-bold text-[var(--color-ink)]">Explanation:</span>{' '}
                       {q.explanation}
                     </div>
                   )}
@@ -710,7 +712,7 @@ export function RevisionView() {
                 type="button"
                 disabled={Object.keys(quizSelections).length < weekQuizzes.length}
                 onClick={handleSubmitQuiz}
-                className="px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] disabled:bg-[#CBD5E1] text-white text-sm font-medium cursor-pointer"
+                className="min-h-[44px] px-5 py-2.5 border border-[var(--color-ink)] bg-[var(--color-signal)] disabled:bg-[var(--color-sunken)] disabled:text-[var(--color-secondary)] text-[var(--color-ink)] text-xs font-mono font-bold cursor-pointer transition-colors"
               >
                 Grade Quiz ({Object.keys(quizSelections).length}/{weekQuizzes.length} answered)
               </button>
@@ -724,10 +726,10 @@ export function RevisionView() {
         <div className="space-y-4">
           <SectionCard className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-[#0F172A]">
+              <h2 className="text-base font-serif font-bold text-[var(--color-ink)]">
                 Short-Answer Conceptual Checks · Week {saWeek}
               </h2>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                 Write your explanation first, then compare against the model answer and key
                 checkpoints.
               </p>
@@ -736,7 +738,7 @@ export function RevisionView() {
               aria-label="Select short answer week"
               value={saWeek}
               onChange={(e) => setSaWeek(Number(e.target.value))}
-              className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+              className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)]"
             >
               {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
                 <option key={w} value={w}>
@@ -750,23 +752,23 @@ export function RevisionView() {
             const revealed = Boolean(saRevealed[sa.id]);
             return (
               <SectionCard key={sa.id} className="p-5 space-y-3">
-                <div className="flex items-center gap-2 text-xs text-[#2563EB] font-semibold">
-                  <HelpCircle className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-xs text-[var(--color-ink)] font-mono font-bold">
+                  <HelpCircle className="w-4 h-4 text-[var(--color-ink)]" />
                   <span>{sa.topicLabel}</span>
                 </div>
-                <p className="text-sm font-medium text-[#0F172A]">{sa.prompt}</p>
+                <p className="text-sm font-medium text-[var(--color-ink)]">{sa.prompt}</p>
                 <textarea
                   rows={4}
                   value={saDrafts[sa.id] ?? ''}
                   onChange={(e) => setSaDrafts((p) => ({ ...p, [sa.id]: e.target.value }))}
                   placeholder="Draft your explanation in your own words before revealing the model answer..."
-                  className="w-full px-3 py-2.5 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
+                  className="w-full px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-ink)]"
                 />
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setSaRevealed((p) => ({ ...p, [sa.id]: !revealed }))}
-                    className="px-3.5 py-2 rounded-lg bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-medium cursor-pointer"
+                    className="min-h-[44px] px-3.5 py-2 border border-[var(--color-ink)] bg-[var(--color-ink)] hover:bg-[var(--color-secondary)] text-[var(--color-paper)] text-xs font-mono font-bold cursor-pointer transition-colors"
                   >
                     {revealed ? 'Hide Model Answer' : 'Reveal Model Answer & Checkpoints'}
                   </button>
@@ -781,20 +783,20 @@ export function RevisionView() {
                         source: 'short_answer',
                       })
                     }
-                    className="px-3.5 py-2 rounded-lg border border-[#E2E8F0] text-xs font-medium text-[#475569] hover:bg-[#F8FAFC] cursor-pointer"
+                    className="min-h-[44px] px-3.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] hover:bg-[var(--color-sunken)] cursor-pointer transition-colors"
                   >
                     Flag as Weak Concept
                   </button>
                 </div>
 
                 {revealed && (
-                  <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-3 text-xs text-[#334155]">
+                  <div className="p-4 bg-[var(--color-sunken)]/50 border border-[var(--color-line-soft)] space-y-3 text-xs text-[var(--color-secondary)]">
                     <div>
-                      <p className="font-semibold text-[#0F172A] mb-1">Model Answer</p>
+                      <p className="font-mono font-bold uppercase tracking-wider text-[11px] text-[var(--color-ink)] mb-1">Model Answer</p>
                       <p className="leading-relaxed">{sa.modelAnswer}</p>
                     </div>
                     <div>
-                      <p className="font-semibold text-[#0F172A] mb-1">Key Checkpoints</p>
+                      <p className="font-mono font-bold uppercase tracking-wider text-[11px] text-[var(--color-ink)] mb-1">Key Checkpoints</p>
                       <ul className="list-disc pl-4 space-y-1">
                         {sa.keyCheckpoints.map((cp, idx) => (
                           <li key={idx}>{cp}</li>
@@ -814,10 +816,10 @@ export function RevisionView() {
         <div className="space-y-4">
           <SectionCard className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-[#0F172A]">
+              <h2 className="text-base font-serif font-bold text-[var(--color-ink)]">
                 Offline Coding &amp; Debugging Challenges
               </h2>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                 Synced directly with your Weekly Study Room practical exercise logs.
               </p>
             </div>
@@ -827,7 +829,7 @@ export function RevisionView() {
               onChange={(e) =>
                 setCodingWeek(e.target.value === 'all' ? 'all' : Number(e.target.value))
               }
-              className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+              className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)]"
             >
               <option value="all">All 20 Weeks ({PRACTICAL_EXERCISES.length})</option>
               {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
@@ -847,14 +849,14 @@ export function RevisionView() {
                 <SectionCard key={ex.id} className="p-5 space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-xs text-[#2563EB] font-semibold">
-                        <Code2 className="w-4 h-4" />
+                      <div className="flex items-center gap-2 text-xs text-[var(--color-ink)] font-mono font-bold">
+                        <Code2 className="w-4 h-4 text-[var(--color-ink)]" />
                         <span>
                           Week {ex.week} · {ex.type.replace('_', ' ')}
                         </span>
                       </div>
-                      <h3 className="text-sm font-semibold text-[#0F172A]">{ex.title}</h3>
-                      <p className="text-xs text-[#334155] leading-relaxed">{ex.prompt}</p>
+                      <h3 className="text-sm font-serif font-bold text-[var(--color-ink)]">{ex.title}</h3>
+                      <p className="text-xs text-[var(--color-secondary)] leading-relaxed">{ex.prompt}</p>
                     </div>
                     <select
                       aria-label={`Status for ${ex.title}`}
@@ -864,7 +866,7 @@ export function RevisionView() {
                           status: e.target.value as 'not_started' | 'in_progress' | 'completed',
                         })
                       }
-                      className="px-2.5 py-1.5 rounded-md border border-[#E2E8F0] bg-white text-xs font-medium text-[#0F172A] shrink-0 cursor-pointer"
+                      className="min-h-[44px] px-2.5 py-1.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] shrink-0 cursor-pointer"
                     >
                       <option value="not_started">Not started</option>
                       <option value="in_progress">In progress</option>
@@ -873,7 +875,7 @@ export function RevisionView() {
                   </div>
 
                   {ex.starterCode && (
-                    <pre className="p-3 rounded-lg bg-[#0F172A] text-[#F8FAFC] text-xs font-mono overflow-x-auto">
+                    <pre className="p-3 bg-[var(--color-ink)] text-[var(--color-surface)] text-xs font-mono overflow-x-auto border border-[var(--color-line)]">
                       <code>{ex.starterCode}</code>
                     </pre>
                   )}
@@ -881,18 +883,18 @@ export function RevisionView() {
                   <button
                     type="button"
                     onClick={() => setCodingHints((p) => ({ ...p, [ex.id]: !showHint }))}
-                    className="text-xs font-medium text-[#2563EB] hover:text-[#1D4ED8] cursor-pointer"
+                    className="min-h-[44px] inline-flex items-center text-xs font-mono font-bold text-[var(--color-ink)] hover:underline cursor-pointer"
                   >
                     {showHint ? 'Hide Hint & Reference Approach' : 'Show Hint & Reference Approach'}
                   </button>
 
                   {showHint && (
-                    <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#334155] space-y-1">
+                    <div className="p-3 bg-[var(--color-sunken)]/50 border border-[var(--color-line-soft)] text-xs text-[var(--color-secondary)] space-y-1 font-mono">
                       <p>
-                        <span className="font-semibold text-[#0F172A]">Hint:</span> {ex.hint}
+                        <span className="font-bold text-[var(--color-ink)]">Hint:</span> {ex.hint}
                       </p>
                       <p>
-                        <span className="font-semibold text-[#0F172A]">Reference:</span>{' '}
+                        <span className="font-bold text-[var(--color-ink)]">Reference:</span>{' '}
                         {ex.referenceApproach}
                       </p>
                     </div>
@@ -909,7 +911,7 @@ export function RevisionView() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-7 space-y-4">
             <SectionCard className="p-5 space-y-4">
-              <h2 className="text-base font-semibold text-[#0F172A]">Weak Concepts Queue</h2>
+              <h2 className="text-base font-serif font-bold text-[var(--color-ink)]">Weak Concepts Queue</h2>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -928,7 +930,7 @@ export function RevisionView() {
                 <select
                   value={weakWeek}
                   onChange={(e) => setWeakWeek(Number(e.target.value))}
-                  className="sm:col-span-3 px-2.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+                  className="min-h-[44px] sm:col-span-3 px-2.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)]"
                 >
                   {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
                     <option key={w} value={w}>
@@ -942,18 +944,18 @@ export function RevisionView() {
                   value={weakTitle}
                   onChange={(e) => setWeakTitle(e.target.value)}
                   placeholder="Concept name..."
-                  className="sm:col-span-5 px-3 py-2 rounded-lg border border-[#E2E8F0] text-xs text-[#0F172A]"
+                  className="min-h-[44px] sm:col-span-5 px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)]"
                 />
                 <input
                   type="text"
                   value={weakNotes}
                   onChange={(e) => setWeakNotes(e.target.value)}
                   placeholder="Notes (optional)"
-                  className="sm:col-span-4 px-3 py-2 rounded-lg border border-[#E2E8F0] text-xs text-[#0F172A]"
+                  className="min-h-[44px] sm:col-span-4 px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)]"
                 />
                 <button
                   type="submit"
-                  className="sm:col-span-12 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-medium cursor-pointer"
+                  className="min-h-[44px] sm:col-span-12 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 border border-[var(--color-ink)] bg-[var(--color-signal)] text-[var(--color-ink)] text-xs font-mono font-bold hover:brightness-95 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Weak Concept</span>
@@ -961,12 +963,12 @@ export function RevisionView() {
               </form>
 
               {state.weakConcepts.length === 0 ? (
-                <p className="py-6 text-xs text-[#64748B] text-center">
+                <p className="py-6 text-xs font-mono text-[var(--color-secondary)] text-center">
                   No weak concepts logged yet. Flag concepts from the Study Room, Flashcards, or
                   missed quiz questions.
                 </p>
               ) : (
-                <div className="divide-y divide-[#F1F5F9]">
+                <div className="divide-y divide-[var(--color-line-soft)]">
                   {state.weakConcepts.map((wc) => (
                     <div
                       key={wc.id}
@@ -977,21 +979,21 @@ export function RevisionView() {
                           type="checkbox"
                           checked={wc.resolved}
                           onChange={() => toggleWeakConceptResolved(wc.id)}
-                          className="mt-1 h-4 w-4 rounded border-[#CBD5E1] text-[#059669]"
+                          className="mt-1 h-4 w-4 border border-[var(--color-line)] text-[var(--color-ink)] accent-[var(--color-ink)]"
                         />
                         <div className="min-w-0">
                           <p
                             className={`text-sm font-medium ${
-                              wc.resolved ? 'line-through text-[#94A3B8]' : 'text-[#0F172A]'
+                              wc.resolved ? 'line-through text-[var(--color-secondary)]' : 'text-[var(--color-ink)]'
                             }`}
                           >
                             {wc.title}
                           </p>
-                          <p className="text-xs text-[#64748B]">
+                          <p className="text-xs font-mono text-[var(--color-secondary)]">
                             Week {wc.week} · source: {wc.source}
                           </p>
                           {wc.notes && (
-                            <p className="text-xs text-[#475569] mt-0.5">{wc.notes}</p>
+                            <p className="text-xs text-[var(--color-secondary)] mt-0.5">{wc.notes}</p>
                           )}
                         </div>
                       </label>
@@ -999,7 +1001,7 @@ export function RevisionView() {
                         type="button"
                         aria-label="Delete weak concept"
                         onClick={() => deleteWeakConcept(wc.id)}
-                        className="p-1 text-[#94A3B8] hover:text-[#DC2626] cursor-pointer"
+                        className="min-h-[44px] min-w-[44px] p-2 text-[var(--color-secondary)] hover:text-[var(--color-ink)] cursor-pointer inline-flex items-center justify-center"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -1012,30 +1014,26 @@ export function RevisionView() {
 
           <div className="lg:col-span-5">
             <SectionCard className="p-5 space-y-3">
-              <h2 className="text-base font-semibold text-[#0F172A]">Quiz Attempt History</h2>
+              <h2 className="text-base font-serif font-bold text-[var(--color-ink)]">Quiz Attempt History</h2>
               {state.quizAttempts.length === 0 ? (
-                <p className="py-6 text-xs text-[#64748B] text-center">
+                <p className="py-6 text-xs font-mono text-[var(--color-secondary)] text-center">
                   Complete any weekly quiz to record scores here.
                 </p>
               ) : (
-                <div className="divide-y divide-[#F1F5F9]">
+                <div className="divide-y divide-[var(--color-line-soft)]">
                   {state.quizAttempts.map((att) => {
                     const pct = Math.round((att.score / Math.max(1, att.total)) * 100);
                     return (
                       <div key={att.id} className="py-2.5 flex items-center justify-between gap-3">
                         <div>
-                          <p className="text-xs font-semibold text-[#0F172A]">
+                          <p className="text-xs font-mono font-bold text-[var(--color-ink)]">
                             Week {att.week} Quiz
                           </p>
-                          <p className="text-[11px] text-[#64748B]">
+                          <p className="text-[11px] font-mono text-[var(--color-secondary)]">
                             {new Date(att.createdAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <span
-                          className={`text-xs font-semibold tabular-nums ${
-                            pct >= 70 ? 'text-[#047857]' : 'text-[#B45309]'
-                          }`}
-                        >
+                        <span className="text-xs font-mono font-bold tabular-nums text-[var(--color-ink)]">
                           {att.score}/{att.total} ({pct}%)
                         </span>
                       </div>
