@@ -84,30 +84,34 @@ export function SettingsView() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl pb-12">
       <div>
-        <h1 className="text-2xl font-semibold text-[#0F172A] tracking-tight">Settings &amp; Sync</h1>
-        <p className="text-sm text-[#64748B] mt-1">
+        <h1 className="text-2xl sm:text-3xl font-display font-medium text-[var(--color-ink)] tracking-tight">
+          Settings &amp; Sync
+        </h1>
+        <p className="text-sm text-[var(--color-secondary)] mt-1">
           Configure your active DataMites week, weekly hour targets, Firebase cloud sync, and local
           JSON backups.
         </p>
       </div>
 
       {/* Profile & Active Week */}
-      <SectionCard className="p-5 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#E2E8F0]">
+      <SectionCard className="p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[var(--color-line)]">
           <div>
-            <h2 className="text-base font-semibold text-[#0F172A]">Learner Profile &amp; Pace</h2>
-            <p className="text-xs text-[#64748B]">
+            <h2 className="text-base font-display font-semibold text-[var(--color-ink)]">
+              Learner Profile &amp; Pace
+            </h2>
+            <p className="text-xs font-mono text-[var(--color-secondary)]">
               Adjust your active DataMites week or weekly study commitment at any time.
             </p>
           </div>
           <button
             type="button"
             onClick={() => setShowOnboardingModal(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E2E8F0] hover:bg-[#F8FAFC] text-xs font-medium text-[#334155] whitespace-nowrap shrink-0 cursor-pointer"
+            className="min-h-[44px] inline-flex items-center gap-1.5 px-3 py-1.5 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono text-[var(--color-ink)] whitespace-nowrap shrink-0 cursor-pointer transition-colors"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5 text-[var(--color-secondary)]" />
             <span>Re-run Onboarding</span>
           </button>
         </div>
@@ -115,23 +119,25 @@ export function SettingsView() {
         <form onSubmit={handleSaveProfile} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#334155] mb-1">Learner Name</label>
+              <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1">
+                Learner Name
+              </label>
               <input
                 type="text"
                 value={learnerName}
                 onChange={(e) => setLearnerName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-body text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-ink)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#334155] mb-1">
+              <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1">
                 Active DataMites Week
               </label>
               <select
                 value={state.profile.currentWeek}
                 onChange={(e) => updateProfile({ currentWeek: Number(e.target.value) })}
-                className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-sm text-[#0F172A]"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] cursor-pointer focus:outline-none focus:border-[var(--color-ink)]"
               >
                 {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
                   <option key={w} value={w}>
@@ -144,7 +150,7 @@ export function SettingsView() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#334155] mb-1">
+              <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1">
                 Live Training (hrs/week)
               </label>
               <input
@@ -153,11 +159,11 @@ export function SettingsView() {
                 max={60}
                 value={liveHours}
                 onChange={(e) => setLiveHours(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A] tabular-nums"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-mono text-[var(--color-ink)] tabular-nums focus:outline-none focus:border-[var(--color-ink)]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#334155] mb-1">
+              <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1">
                 Self-Study &amp; Revision (hrs/week)
               </label>
               <input
@@ -166,11 +172,11 @@ export function SettingsView() {
                 max={60}
                 value={selfHours}
                 onChange={(e) => setSelfHours(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A] tabular-nums"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-mono text-[var(--color-ink)] tabular-nums focus:outline-none focus:border-[var(--color-ink)]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#334155] mb-1">
+              <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1">
                 Hands-on Practice (hrs/week)
               </label>
               <input
@@ -179,14 +185,14 @@ export function SettingsView() {
                 max={60}
                 value={practiceHours}
                 onChange={(e) => setPracticeHours(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A] tabular-nums"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-mono text-[var(--color-ink)] tabular-nums focus:outline-none focus:border-[var(--color-ink)]"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium cursor-pointer"
+            className="min-h-[44px] px-5 py-2 border border-[var(--color-ink)] bg-[var(--color-signal)] text-[var(--color-ink)] text-xs font-mono font-bold hover:brightness-95 cursor-pointer transition-colors"
           >
             Save Preferences
           </button>
@@ -194,28 +200,28 @@ export function SettingsView() {
       </SectionCard>
 
       {/* Firebase Cloud Sync + Local Fallback */}
-      <SectionCard className="p-5 space-y-4">
-        <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
+      <SectionCard className="p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
+        <div className="flex items-start justify-between gap-3 pb-3 border-b border-[var(--color-line)]">
           <div>
-            <h2 className="text-base font-semibold text-[#0F172A]">
+            <h2 className="text-base font-display font-semibold text-[var(--color-ink)]">
               Firebase Cloud Sync &amp; Local Persistence
             </h2>
-            <p className="text-xs text-[#64748B] mt-0.5">
+            <p className="text-xs text-[var(--color-secondary)] mt-0.5">
               All progress saves automatically to your browser&apos;s local storage right away.
               Sign in with Google to also sync your workspace across devices via Firestore.
             </p>
           </div>
-          <Cloud className="w-5 h-5 text-[#2563EB] shrink-0" />
+          <Cloud className="w-5 h-5 text-[var(--color-ink)] shrink-0" />
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]">
-          <div className="space-y-1 text-xs">
-            <p className="font-semibold text-[#0F172A]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-[var(--color-line)] bg-[var(--color-sunken)]/40">
+          <div className="space-y-1.5 text-xs">
+            <p className="font-semibold text-[var(--color-ink)] font-body">
               {user ? `Signed in as ${user.email}` : 'Local Storage Mode (Not signed in)'}
             </p>
-            <p className="text-[#64748B]">
+            <p className="font-mono text-[var(--color-secondary)]">
               Sync state:{' '}
-              <span className="font-medium text-[#334155]">
+              <span className="font-semibold text-[var(--color-ink)]">
                 {syncStatus === 'synced'
                   ? 'Synced with Firebase'
                   : syncStatus === 'syncing'
@@ -234,12 +240,12 @@ export function SettingsView() {
               )}
             </p>
             {!cloudConfigured && (
-              <p className="text-[#B45309]">
+              <p className="text-xs font-mono text-[var(--color-ink)] border-l-2 border-[var(--color-ink)] pl-2 mt-1">
                 Cloud sync is not configured for this deployment (missing{' '}
                 {missingFirebaseEnv.join(', ')}). Your progress is saved on this device only.
               </p>
             )}
-            {syncError && <p className="text-[#B45309]">{syncError}</p>}
+            {syncError && <p className="text-xs font-mono text-[var(--color-ink)]">{syncError}</p>}
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -248,7 +254,7 @@ export function SettingsView() {
                 <button
                   type="button"
                   onClick={() => void syncNow()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F1F5F9] text-xs font-medium text-[#0F172A] cursor-pointer"
+                  className="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono font-medium text-[var(--color-ink)] cursor-pointer transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Sync Now</span>
@@ -256,7 +262,7 @@ export function SettingsView() {
                 <button
                   type="button"
                   onClick={() => void handleSignOut()}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#FEF2F2] hover:text-[#DC2626] text-xs font-medium text-[#475569] cursor-pointer"
+                  className="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 border border-[var(--color-line-soft)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] hover:border-[var(--color-ink)] text-xs font-mono font-medium text-[var(--color-secondary)] hover:text-[var(--color-ink)] cursor-pointer transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out</span>
@@ -267,7 +273,7 @@ export function SettingsView() {
                 type="button"
                 disabled={!cloudConfigured}
                 onClick={() => void handleGoogleSignIn()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="min-h-[44px] inline-flex items-center gap-2 px-4 py-2 border border-[var(--color-ink)] bg-[var(--color-signal)] text-[var(--color-ink)] text-xs font-mono font-bold hover:brightness-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>Sign in with Google</span>
@@ -278,8 +284,8 @@ export function SettingsView() {
       </SectionCard>
 
       {/* JSON Export / Import & Reset */}
-      <SectionCard className="p-5 space-y-4">
-        <h2 className="text-base font-semibold text-[#0F172A] pb-3 border-b border-[#E2E8F0]">
+      <SectionCard className="p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
+        <h2 className="text-base font-display font-semibold text-[var(--color-ink)] pb-3 border-b border-[var(--color-line)]">
           Backup, Restore &amp; Reset
         </h2>
 
@@ -287,9 +293,9 @@ export function SettingsView() {
           <button
             type="button"
             onClick={handleDownloadJson}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-xs font-medium text-[#0F172A] cursor-pointer"
+            className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono font-medium text-[var(--color-ink)] cursor-pointer transition-colors"
           >
-            <Download className="w-4 h-4 text-[#2563EB]" />
+            <Download className="w-4 h-4 text-[var(--color-ink)]" />
             <span>Export JSON Backup</span>
           </button>
 
@@ -303,34 +309,43 @@ export function SettingsView() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-xs font-medium text-[#0F172A] cursor-pointer"
+            className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono font-medium text-[var(--color-ink)] cursor-pointer transition-colors"
           >
-            <Upload className="w-4 h-4 text-[#059669]" />
+            <Upload className="w-4 h-4 text-[var(--color-ink)]" />
             <span>Restore JSON Backup</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowResetModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#FECACA] bg-[#FEF2F2] hover:bg-[#FEE2E2] text-xs font-medium text-[#B91C1C] cursor-pointer ml-auto"
+            className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:border-[var(--color-ink)] hover:bg-[var(--color-sunken)] text-xs font-mono font-medium text-[var(--color-secondary)] hover:text-[var(--color-ink)] cursor-pointer sm:ml-auto transition-colors"
           >
-            <AlertTriangle className="w-4 h-4" />
+            <AlertTriangle className="w-4 h-4 text-[var(--color-ink)]" />
             <span>Reset All Progress</span>
           </button>
         </div>
 
-        {importError && <p className="text-xs text-[#DC2626]">{importError}</p>}
+        {importError && (
+          <p className="text-xs font-mono text-[var(--color-ink)] border border-[var(--color-line)] bg-[var(--color-sunken)] p-2.5">
+            {importError}
+          </p>
+        )}
 
         {localBackups.length > 0 && (
-          <div className="pt-3 border-t border-[#E2E8F0] space-y-2">
-            <p className="text-xs font-semibold text-[#0F172A]">Automatic safety backups on this device</p>
-            <p className="text-xs text-[#64748B]">
+          <div className="pt-3 border-t border-[var(--color-line-soft)] space-y-2">
+            <p className="text-xs font-mono font-semibold text-[var(--color-ink)] uppercase tracking-wider">
+              Automatic safety backups on this device
+            </p>
+            <p className="text-xs text-[var(--color-secondary)]">
               A copy of your local data is saved automatically before it is first merged into a
               Google account, so nothing is lost if a merge is not what you expected.
             </p>
             <ul className="space-y-1.5">
               {localBackups.map((b) => (
-                <li key={b.key} className="flex items-center justify-between gap-3 text-xs text-[#475569]">
+                <li
+                  key={b.key}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 border border-[var(--color-line-soft)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-secondary)]"
+                >
                   <span className="truncate">
                     {new Date(b.createdAt).toLocaleString()} ·{' '}
                     {b.reason === 'otheraccount' ? 'data from another account' : 'before first sync'} ·{' '}
@@ -339,9 +354,9 @@ export function SettingsView() {
                   <button
                     type="button"
                     onClick={() => downloadLocalBackup(b.key)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-[11px] font-medium text-[#0F172A] cursor-pointer shrink-0"
+                    className="min-h-[44px] inline-flex items-center gap-1 px-3 py-1 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-[11px] font-mono font-medium text-[var(--color-ink)] cursor-pointer shrink-0 transition-colors"
                   >
-                    <Download className="w-3 h-3 text-[#2563EB]" />
+                    <Download className="w-3.5 h-3.5 text-[var(--color-ink)]" />
                     <span>Download</span>
                   </button>
                 </li>
@@ -351,17 +366,17 @@ export function SettingsView() {
         )}
       </SectionCard>
 
-      {/* In-App Confirmation Modal for Reset (No window.confirm) */}
+      {/* In-App Confirmation Modal for Reset (Restrained Ink destructive styling, accessible above mobile nav) */}
       {showResetModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F172A]/40 p-4">
-          <div className="bg-white border border-[#E2E8F0] rounded-xl max-w-md w-full p-5 space-y-4 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-ink)]/50 p-4">
+          <div className="bg-[var(--color-surface)] border-2 border-[var(--color-ink)] max-w-md w-full p-5 sm:p-6 space-y-4 shadow-none">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-[#DC2626] shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-[var(--color-ink)] shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-base font-semibold text-[#0F172A]">
+                <h3 className="text-base font-display font-bold text-[var(--color-ink)]">
                   Reset all learning progress?
                 </h3>
-                <p className="text-xs text-[#475569] mt-1 leading-relaxed">
+                <p className="text-xs text-[var(--color-secondary)] mt-1.5 leading-relaxed">
                   This clears all topic statuses, study sessions, flashcards, quizzes, projects, and
                   journal entries and re-opens onboarding.{' '}
                   {user
@@ -371,11 +386,11 @@ export function SettingsView() {
                 </p>
               </div>
             </div>
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-3 border-t border-[var(--color-line-soft)]">
               <button
                 type="button"
                 onClick={() => setShowResetModal(false)}
-                className="px-3.5 py-2 rounded-lg border border-[#E2E8F0] text-xs font-medium text-[#475569] hover:bg-[#F8FAFC] cursor-pointer"
+                className="min-h-[44px] px-4 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono font-medium text-[var(--color-secondary)] hover:text-[var(--color-ink)] cursor-pointer transition-colors"
               >
                 Cancel
               </button>
@@ -385,7 +400,7 @@ export function SettingsView() {
                   resetAllProgress();
                   setShowResetModal(false);
                 }}
-                className="px-3.5 py-2 rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] text-white text-xs font-medium cursor-pointer"
+                className="min-h-[44px] px-4 py-2 border-2 border-[var(--color-ink)] bg-[var(--color-sunken)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] text-xs font-mono font-bold text-[var(--color-ink)] cursor-pointer transition-colors"
               >
                 Confirm Reset
               </button>

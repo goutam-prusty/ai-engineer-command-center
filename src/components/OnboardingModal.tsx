@@ -33,22 +33,22 @@ export function OnboardingModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-[#0F172A]/40 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-[var(--color-ink)]/50 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="onboarding-title"
     >
-      <div className="bg-white border border-[#E2E8F0] rounded-2xl max-w-2xl w-full shadow-xl overflow-hidden my-auto">
-        <div className="px-6 py-5 border-b border-[#E2E8F0] flex items-start justify-between gap-4">
+      <div className="bg-[var(--color-surface)] border-2 border-[var(--color-ink)] max-w-2xl w-full shadow-none overflow-hidden my-auto">
+        <div className="px-6 py-5 border-b border-[var(--color-line)] bg-[var(--color-surface)] flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 border border-[var(--color-line)] bg-[var(--color-sunken)] text-[var(--color-ink)] flex items-center justify-center shrink-0">
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <h2 id="onboarding-title" className="text-lg font-bold text-[#0F172A]">
+              <h2 id="onboarding-title" className="text-lg font-serif font-bold text-[var(--color-ink)]">
                 Configure Your AI Engineer Command Center
               </h2>
-              <p className="text-sm text-[#475569] mt-0.5">
+              <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                 Start from your exact current DataMites week — never forced back to Week 1.
               </p>
             </div>
@@ -57,7 +57,7 @@ export function OnboardingModal() {
             <button
               type="button"
               onClick={() => setShowOnboardingModal(false)}
-              className="p-1.5 rounded-lg text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
+              className="min-h-[44px] min-w-[44px] p-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-secondary)] hover:text-[var(--color-ink)] hover:bg-[var(--color-sunken)] cursor-pointer flex items-center justify-center transition-colors"
               aria-label="Close setup modal"
             >
               <X className="w-5 h-5" />
@@ -67,43 +67,43 @@ export function OnboardingModal() {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
           {/* Fixed 4-Tier Learning Hierarchy */}
-          <div className="rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2.5">
-              <Layers className="w-3.5 h-3.5 text-[#2563EB]" />
+          <div className="border border-[var(--color-line)] bg-[var(--color-sunken)]/50 p-4">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-ink)] mb-2.5">
+              <Layers className="w-3.5 h-3.5 text-[var(--color-ink)]" />
               Fixed Learning Priority Hierarchy
             </div>
-            <ol className="grid sm:grid-cols-2 gap-2 text-xs text-[#334155]">
+            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-[var(--color-secondary)]">
               <li className="flex items-start gap-2">
-                <span className="font-mono font-bold text-[#2563EB]">1.</span>
+                <span className="font-mono font-bold text-[var(--color-ink)]">1.</span>
                 <span>
-                  <strong className="text-[#0F172A]">DataMites AI Engineer</strong> — Official master sequence (Weeks 1–20)
+                  <strong className="text-[var(--color-ink)]">DataMites AI Engineer</strong> — Official master sequence (Weeks 1–20)
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-mono font-bold text-[#2563EB]">2.</span>
+                <span className="font-mono font-bold text-[var(--color-ink)]">2.</span>
                 <span>
-                  <strong className="text-[#0F172A]">CodeWithHarry Python Bootcamp</strong> — Main Python & Git supplement
+                  <strong className="text-[var(--color-ink)]">CodeWithHarry Python Bootcamp</strong> — Main Python & Git supplement
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-mono font-bold text-[#2563EB]">3.</span>
+                <span className="font-mono font-bold text-[var(--color-ink)]">3.</span>
                 <span>
-                  <strong className="text-[#0F172A]">CodeWithHarry Data Science</strong> — Main DS & ML supplement (Hindi)
+                  <strong className="text-[var(--color-ink)]">CodeWithHarry Data Science</strong> — Main DS & ML supplement (Hindi)
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-mono font-bold text-[#2563EB]">4.</span>
+                <span className="font-mono font-bold text-[var(--color-ink)]">4.</span>
                 <span>
-                  <strong className="text-[#0F172A]">SSD Archive Courses</strong> — Targeted essential gap-fillers only
+                  <strong className="text-[var(--color-ink)]">SSD Archive Courses</strong> — Targeted essential gap-fillers only
                 </span>
               </li>
             </ol>
           </div>
 
           {/* Name & Active Week */}
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="onb-name" className="block text-sm font-medium text-[#0F172A] mb-1.5">
+              <label htmlFor="onb-name" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-ink)] mb-1.5">
                 Your Name
               </label>
               <input
@@ -113,19 +113,19 @@ export function OnboardingModal() {
                 value={learnerName}
                 onChange={(e) => setLearnerName(e.target.value)}
                 placeholder="e.g. Rohan Sharma"
-                className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] bg-white text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB]"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)]"
               />
             </div>
 
             <div>
-              <label htmlFor="onb-week" className="block text-sm font-medium text-[#0F172A] mb-1.5">
+              <label htmlFor="onb-week" className="block text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-ink)] mb-1.5">
                 Actual Current DataMites Week
               </label>
               <select
                 id="onb-week"
                 value={selectedWeek}
                 onChange={(e) => setSelectedWeek(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] bg-white text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB]"
+                className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)]"
               >
                 {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => {
                   const c = getCourseForWeek(w);
@@ -140,29 +140,29 @@ export function OnboardingModal() {
           </div>
 
           {/* Preview of selected week */}
-          <div className="rounded-lg border border-[#BFDBFE] bg-[#EFF6FF]/60 px-4 py-3 text-sm">
-            <div className="font-semibold text-[#1E3A8A]">
+          <div className="border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 text-sm">
+            <div className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-ink)]">
               Selected: Week {selectedWeek} · {previewCourse.title}
             </div>
-            <p className="text-xs text-[#334155] mt-0.5">
+            <p className="text-xs text-[var(--color-secondary)] mt-1 font-mono">
               {previewCourse.courseCode} · {previewCourse.liveHours}h official course live training · Tools:{' '}
               {previewCourse.tools.join(', ')}
             </p>
           </div>
 
           {selectedWeek > 1 && (
-            <label className="flex items-start gap-2.5 p-3.5 rounded-lg border border-[#E2E8F0] hover:bg-[#F8FAFC] cursor-pointer">
+            <label className="min-h-[44px] flex items-start gap-3 p-3.5 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] cursor-pointer select-none transition-colors">
               <input
                 type="checkbox"
                 checked={markPriorCompleted}
                 onChange={(e) => setMarkPriorCompleted(e.target.checked)}
-                className="mt-0.5 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]"
+                className="mt-0.5 w-4 h-4 border border-[var(--color-line)] text-[var(--color-ink)] accent-[var(--color-ink)] focus:ring-0"
               />
-              <span className="text-sm text-[#334155]">
-                <strong className="text-[#0F172A] font-medium">
+              <span className="text-xs text-[var(--color-ink)]">
+                <strong className="text-[var(--color-ink)] font-bold">
                   Mark Weeks 1–{selectedWeek - 1} official subtopics as Complete
                 </strong>
-                <span className="block text-xs text-[#64748B] mt-0.5">
+                <span className="block text-[11px] text-[var(--color-secondary)] mt-0.5 font-mono">
                   You can still adjust any individual module or flag topics for revision later in Official Curriculum.
                 </span>
               </span>
@@ -172,14 +172,16 @@ export function OnboardingModal() {
           {/* Weekly Hours Target */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-[#0F172A]">Weekly Study Time Budget</span>
-              <span className="text-xs text-[#64748B] tabular-nums">
-                Total: {liveHours + selfHours + practiceHours}h / week (Brochure baseline: 20h)
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-ink)]">
+                Weekly Study Time Budget
+              </span>
+              <span className="text-xs font-mono text-[var(--color-secondary)] tabular-nums">
+                Total: {liveHours + selfHours + practiceHours}h / week (Baseline: 20h)
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label htmlFor="onb-live" className="block text-xs text-[#475569] mb-1">
+                <label htmlFor="onb-live" className="block text-[11px] font-mono text-[var(--color-secondary)] mb-1">
                   Live Training (h)
                 </label>
                 <input
@@ -189,11 +191,11 @@ export function OnboardingModal() {
                   max={40}
                   value={liveHours}
                   onChange={(e) => setLiveHours(Math.max(0, Math.min(40, Number(e.target.value) || 0)))}
-                  className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] text-sm tabular-nums"
+                  className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-mono text-[var(--color-ink)] tabular-nums focus:outline-none focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)]"
                 />
               </div>
               <div>
-                <label htmlFor="onb-self" className="block text-xs text-[#475569] mb-1">
+                <label htmlFor="onb-self" className="block text-[11px] font-mono text-[var(--color-secondary)] mb-1">
                   Self-Study & Rev (h)
                 </label>
                 <input
@@ -203,11 +205,11 @@ export function OnboardingModal() {
                   max={40}
                   value={selfHours}
                   onChange={(e) => setSelfHours(Math.max(0, Math.min(40, Number(e.target.value) || 0)))}
-                  className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] text-sm tabular-nums"
+                  className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-mono text-[var(--color-ink)] tabular-nums focus:outline-none focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)]"
                 />
               </div>
               <div>
-                <label htmlFor="onb-prac" className="block text-xs text-[#475569] mb-1">
+                <label htmlFor="onb-prac" className="block text-[11px] font-mono text-[var(--color-secondary)] mb-1">
                   Practice & Projects (h)
                 </label>
                 <input
@@ -217,20 +219,20 @@ export function OnboardingModal() {
                   max={40}
                   value={practiceHours}
                   onChange={(e) => setPracticeHours(Math.max(0, Math.min(40, Number(e.target.value) || 0)))}
-                  className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] text-sm tabular-nums"
+                  className="min-h-[44px] w-full px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm font-mono text-[var(--color-ink)] tabular-nums focus:outline-none focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-[#E2E8F0] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-[#64748B]">
-              <CheckCircle2 className="w-4 h-4 text-[#059669] shrink-0" />
-              <span>Saves automatically locally + syncs to Firebase when signed in.</span>
+          <div className="pt-4 border-t border-[var(--color-line)] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 text-xs text-[var(--color-secondary)] font-mono">
+              <CheckCircle2 className="w-4 h-4 text-[var(--color-ink)] shrink-0" />
+              <span>Saves locally + syncs to Firebase when signed in.</span>
             </div>
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] text-white text-sm font-semibold hover:bg-[#1D4ED8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-[var(--color-ink)] bg-[var(--color-signal)] text-[var(--color-ink)] text-xs font-mono font-bold hover:brightness-95 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               Open Week {selectedWeek} Study Room
               <ArrowRight className="w-4 h-4" />
