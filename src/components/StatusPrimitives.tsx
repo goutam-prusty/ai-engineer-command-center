@@ -41,40 +41,61 @@ export function formatTopicStatus(status: TopicStatus): string {
   return TOPIC_STATUS_OPTIONS.find((o) => o.value === status)?.label ?? 'Not started';
 }
 
+/**
+ * Restrained, neutral, ink-based topic status styling conforming to Paper & Signal.
+ * Does not introduce unapproved saturated green/blue/amber colors.
+ * Relies on dark ink, sunken neutral surfaces, and distinct border weights/styles.
+ */
 export function topicStatusTone(status: TopicStatus): string {
   switch (status) {
     case 'complete':
+      // Solid dark ink border with sunken paper fill to indicate verified completion
+      return 'text-[var(--color-ink)] bg-[var(--color-sunken)] border-[var(--color-ink)] font-semibold';
     case 'demonstrated':
-      return 'text-[#047857] bg-[#ECFDF5] border-[#A7F3D0]';
+      // Double/thick border with sunken fill to represent hands-on demonstration
+      return 'text-[var(--color-ink)] bg-[var(--color-sunken)] border-2 border-[var(--color-ink)] font-semibold';
     case 'practised':
+      // Solid hairline border with surface fill
+      return 'text-[var(--color-ink)] bg-[var(--color-surface)] border-[var(--color-line)] font-medium';
     case 'in_progress':
-      return 'text-[#1D4ED8] bg-[#EFF6FF] border-[#BFDBFE]';
+      // Dashed hairline border with surface fill to represent active learning in progress
+      return 'text-[var(--color-ink)] bg-[var(--color-surface)] border border-dashed border-[var(--color-line)] font-medium';
     case 'needs_revision':
-      return 'text-[#B45309] bg-[#FFFBEB] border-[#FDE68A]';
+      // Hairline border with subtle underline decoration to call for review without bright amber
+      return 'text-[var(--color-ink)] bg-[var(--color-surface)] border-[var(--color-line)] underline decoration-[var(--color-secondary)] font-medium';
     default:
-      return 'text-[#475569] bg-[#F8FAFC] border-[#E2E8F0]';
+      // Quiet unstarted state on paper background with soft border
+      return 'text-[var(--color-secondary)] bg-[var(--color-paper)] border-[var(--color-line-soft)]';
   }
 }
 
+/**
+ * Resource Classification Tag conforming to Paper & Signal neutral typography and tokens.
+ * Distinguishes ESSENTIAL, OPTIONAL, and SKIP strictly through typography, borders, and decorations.
+ */
 export function ClassificationTag({ value }: { value: ResourceClassification }) {
   const styles: Record<ResourceClassification, string> = {
-    ESSENTIAL: 'text-[#1D4ED8] bg-[#EFF6FF] border-[#BFDBFE]',
-    OPTIONAL: 'text-[#475569] bg-[#F8FAFC] border-[#CBD5E1]',
-    SKIP: 'text-[#94A3B8] bg-[#F8FAFC] border-[#E2E8F0] line-through decoration-[#CBD5E1]',
+    ESSENTIAL: 'text-[var(--color-ink)] bg-[var(--color-sunken)] border-[var(--color-ink)] font-bold',
+    OPTIONAL: 'text-[var(--color-secondary)] bg-[var(--color-surface)] border-[var(--color-line-soft)] font-normal',
+    SKIP: 'text-[var(--color-secondary)] bg-[var(--color-paper)] border-[var(--color-line-soft)] line-through decoration-[var(--color-line)] opacity-60',
   };
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-semibold tracking-wide rounded border whitespace-nowrap shrink-0 ${styles[value]}`}
+      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-mono tracking-wide border whitespace-nowrap shrink-0 ${styles[value]}`}
     >
       {value}
     </span>
   );
 }
 
+/**
+ * Language Tag conforming to Paper & Signal neutral typography.
+ * Replaces previous bright yellow amber styling with a quiet sunken badge.
+ */
 export function LanguageTag({ language }: { language: 'English' | 'Hindi' }) {
   if (language !== 'Hindi') return null;
   return (
-    <span className="inline-flex items-center px-1.5 py-0.5 text-[11px] font-medium rounded border border-[#FDE68A] bg-[#FFFBEB] text-[#B45309] whitespace-nowrap shrink-0">
+    <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold tracking-wider uppercase border border-[var(--color-line)] bg-[var(--color-sunken)] text-[var(--color-ink)] whitespace-nowrap shrink-0">
       Hindi
     </span>
   );
@@ -99,21 +120,37 @@ export function formatProvenance(label: ProvenanceLabel): string {
   }
 }
 
+/**
+ * Editorial provenance label in Cascadia Code monospace.
+ */
 export function ProvenanceInline({ label }: { label: ProvenanceLabel }) {
-  const tone =
-    label === 'UNVERIFIED'
-      ? 'text-[#B45309] font-medium'
-      : label === 'DATAMITES_OFFICIAL'
-        ? 'text-[#1D4ED8] font-medium'
-        : 'text-[#64748B]';
-  return <span className={`text-xs ${tone}`}>{formatProvenance(label)}</span>;
+  const isOfficial = label === 'DATAMITES_OFFICIAL';
+  const isUnverified = label === 'UNVERIFIED';
+
+  return (
+    <span
+      className={`text-xs font-mono ${
+        isOfficial
+          ? 'text-[var(--color-ink)] font-bold'
+          : isUnverified
+            ? 'text-[var(--color-secondary)] italic underline'
+            : 'text-[var(--color-secondary)]'
+      }`}
+    >
+      {formatProvenance(label)}
+    </span>
+  );
 }
 
+/**
+ * Rectilinear progress indicator conforming to Paper & Signal.
+ * Replaces bubbly rounded pills with a crisp sunken track and hairline border.
+ */
 export function ProgressBar({
   value,
   max = 100,
-  colorClass = 'bg-[#2563EB]',
-  heightClass = 'h-2',
+  colorClass = 'bg-[var(--color-ink)]',
+  heightClass = 'h-1.5',
 }: {
   value: number;
   max?: number;
@@ -122,15 +159,19 @@ export function ProgressBar({
 }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, Math.round((value / max) * 100))) : 0;
   return (
-    <div className={`w-full ${heightClass} rounded-full bg-[#E2E8F0] overflow-hidden`}>
+    <div className={`w-full ${heightClass} bg-[var(--color-sunken)] border border-[var(--color-line)] overflow-hidden`}>
       <div
-        className={`${heightClass} rounded-full transition-all duration-300 ${colorClass}`}
+        className={`${heightClass} ${colorClass}`}
         style={{ width: `${pct}%` }}
       />
     </div>
   );
 }
 
+/**
+ * Core surface container card conforming to Paper & Signal.
+ * Replaces modern rounded-xl and soft drop shadows with a flat surface and hairline border.
+ */
 export function SectionCard({
   children,
   className = '',
@@ -139,7 +180,7 @@ export function SectionCard({
   className?: string;
 }) {
   return (
-    <div className={`bg-white border border-[#E2E8F0] rounded-xl ${className}`}>
+    <div className={`bg-[var(--color-surface)] border border-[var(--color-line)] shadow-none ${className}`}>
       {children}
     </div>
   );

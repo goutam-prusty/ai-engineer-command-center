@@ -1,46 +1,134 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Paper & Signal Confirmed Palette */
+  --color-paper: #f7f4ec;
+  --color-surface: #fdfcf8;
+  --color-sunken: #efebdf;
+  --color-ink: #17191a;
+  --color-secondary: #4a4f4c;
+  --color-line: #827d71;
+  --color-line-soft: #ddd8cb;
+  --color-project: #f4d9c6;
+  --color-research: #d2e0ea;
+  --color-writing: #d5e2d0;
+  --color-signal: #d3f03c;
 
-  --color-canvas: #f8fafc;
-  --color-surface: #ffffff;
-  --color-ink: #0f172a;
-  --color-ink-secondary: #475569;
-  --color-ink-muted: #64748b;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-soft: #eff6ff;
-  --color-border-subtle: #e2e8f0;
+  /* Backward-compatible semantic tokens for existing views during staged migration */
+  --color-canvas: var(--color-paper);
+  --color-ink-secondary: var(--color-secondary);
+  --color-ink-muted: var(--color-secondary);
+  --color-border-subtle: var(--color-line-soft);
+  --color-accent: var(--color-ink);
+  --color-accent-hover: var(--color-ink);
+  --color-accent-soft: var(--color-sunken);
+
+  /* Paper & Signal Verified OS Font Stacks (Zero Network Font Dependencies) */
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", Consolas, monospace;
+}
+
+:root {
+  color-scheme: light;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --wide: 76rem;
+  --reading: 44rem;
 }
 
 @layer base {
   html {
-    font-family: var(--font-sans);
-    background-color: var(--color-canvas);
+    font-family: var(--font-body);
+    background-color: var(--color-paper);
     color: var(--color-ink);
     color-scheme: light;
     scroll-behavior: smooth;
+    min-width: 20rem;
   }
 
   body {
     margin: 0;
     min-height: 100vh;
+    min-width: 20rem;
     overflow-x: hidden;
-    background-color: var(--color-canvas);
+    background-color: var(--color-paper);
     color: var(--color-ink);
+    font-size: 1rem;
+    line-height: 1.65;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 500;
+    line-height: 1.15;
     text-wrap: balance;
+  }
+
+  p {
+    max-width: 68ch;
   }
 
   code, pre, kbd {
     font-family: var(--font-mono);
   }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.22em;
+  }
+
+  a:hover {
+    text-decoration-thickness: 0.14em;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+/* Verified Paper & Signal Focus Treatment: Dark Ink Outline + Signal Lime Shadow */
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 7px var(--color-signal);
+}
+
+/* Eyebrow / Kicker Typography */
+.ps-eyebrow, .ps-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+/* Accessible Scrollable Table & Code Containment */
+.ps-table-wrap, .ps-code-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  -webkit-overflow-scrolling: touch;
 }
 
 .tabular-nums {
@@ -70,7 +158,10 @@
     scroll-behavior: auto;
   }
   *, *::before, *::after {
-    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
     animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

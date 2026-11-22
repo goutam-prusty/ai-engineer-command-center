@@ -215,10 +215,10 @@ export function RevisionView() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#0F172A] tracking-tight">
+          <h1 className="text-2xl font-display font-medium text-[var(--color-ink)] tracking-tight">
             Revision &amp; Assessments
           </h1>
-          <p className="text-sm text-[#64748B] mt-1">
+          <p className="text-sm text-[var(--color-secondary)] mt-1">
             Curated offline active-recall bank grounded in the 20-week DataMites syllabus and
             verified supplements. Zero external AI API calls.
           </p>
@@ -227,7 +227,7 @@ export function RevisionView() {
       </div>
 
       {/* Sub-navigation tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-[#E2E8F0] pb-2">
+      <div className="flex flex-wrap gap-2 border-b border-[var(--color-line-soft)] pb-2">
         {(
           [
             { id: 'flashcards', label: `Interactive Flashcards (${FLASHCARDS.length})` },
@@ -244,10 +244,10 @@ export function RevisionView() {
             key={t.id}
             type="button"
             onClick={() => setActiveTab(t.id)}
-            className={`px-3.5 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+            className={`min-h-[44px] px-3.5 py-2 text-xs font-mono transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === t.id
-                ? 'bg-[#2563EB] text-white'
-                : 'bg-white border border-[#E2E8F0] text-[#475569] hover:bg-[#F8FAFC]'
+                ? 'bg-[var(--color-ink)] text-[var(--color-paper)] border border-[var(--color-ink)] font-semibold'
+                : 'bg-[var(--color-surface)] border border-[var(--color-line)] text-[var(--color-secondary)] hover:bg-[var(--color-sunken)]'
             }`}
           >
             {t.label}
@@ -261,14 +261,14 @@ export function RevisionView() {
           {/* Mastery Summary + Filter Controls */}
           <SectionCard className="p-4 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-4 text-xs tabular-nums">
-                <span className="font-medium text-[#047857]">
-                  Known: <span className="font-semibold">{flashcardStats.known}</span>
+              <div className="flex flex-wrap items-center gap-4 text-xs tabular-nums font-mono">
+                <span className="font-medium text-[var(--color-ink)]">
+                  Known: <span className="font-bold">{flashcardStats.known}</span>
                 </span>
-                <span className="font-medium text-[#B45309]">
-                  Needs Review: <span className="font-semibold">{flashcardStats.needsReview}</span>
+                <span className="font-medium text-[var(--color-secondary)]">
+                  Needs Review: <span className="font-semibold text-[var(--color-ink)]">{flashcardStats.needsReview}</span>
                 </span>
-                <span className="font-medium text-[#64748B]">
+                <span className="font-medium text-[var(--color-secondary)]">
                   Unreviewed: <span className="font-semibold">{flashcardStats.unreviewed}</span>
                 </span>
               </div>
@@ -276,13 +276,13 @@ export function RevisionView() {
                 <ProgressBar
                   value={flashcardStats.known}
                   max={flashcardStats.total}
-                  colorClass="bg-[#059669]"
+                  colorClass="bg-[var(--color-ink)]"
                   heightClass="h-1.5"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-3 border-t border-[#F1F5F9]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-3 border-t border-[var(--color-line-soft)]">
               <select
                 aria-label="Filter flashcards by DataMites week"
                 value={fcWeekFilter}
@@ -291,7 +291,7 @@ export function RevisionView() {
                   setFcIndex(0);
                   setIsFlipped(false);
                 }}
-                className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+                className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)]"
               >
                 <option value="all">All 20 DataMites Weeks</option>
                 {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
@@ -309,7 +309,7 @@ export function RevisionView() {
                   setFcIndex(0);
                   setIsFlipped(false);
                 }}
-                className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+                className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)]"
               >
                 <option value="all">All Topics ({availableTopics.length})</option>
                 {availableTopics.map((topic) => (
@@ -327,7 +327,7 @@ export function RevisionView() {
                   setFcIndex(0);
                   setIsFlipped(false);
                 }}
-                className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+                className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)]"
               >
                 <option value="all">All Statuses</option>
                 <option value="unreviewed">Unreviewed</option>
@@ -339,7 +339,7 @@ export function RevisionView() {
                 <button
                   type="button"
                   onClick={handleShuffle}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#F1F5F9] text-xs font-medium text-[#334155] whitespace-nowrap shrink-0 cursor-pointer"
+                  className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] active:bg-[var(--color-sunken)] text-xs font-medium text-[var(--color-ink)] whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   <Shuffle className="w-3.5 h-3.5" />
                   <span>Shuffle</span>
@@ -351,7 +351,7 @@ export function RevisionView() {
                     setFcIndex(0);
                     setIsFlipped(false);
                   }}
-                  className="px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-xs font-medium text-[#475569] whitespace-nowrap shrink-0 cursor-pointer"
+                  className="min-h-[44px] px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] active:bg-[var(--color-sunken)] text-xs font-medium text-[var(--color-secondary)] hover:text-[var(--color-ink)] whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   Reset Order
                 </button>
@@ -361,9 +361,9 @@ export function RevisionView() {
 
           {/* Interactive 3D Flashcard Deck */}
           {!activeCard ? (
-            <SectionCard className="p-10 text-center space-y-2">
-              <Layers className="w-8 h-8 text-[#94A3B8] mx-auto" />
-              <p className="text-sm font-medium text-[#0F172A]">
+            <SectionCard className="p-8 sm:p-10 text-center space-y-2">
+              <Layers className="w-8 h-8 text-[var(--color-secondary)] mx-auto" />
+              <p className="text-sm font-medium text-[var(--color-ink)]">
                 No flashcards match the current filter
               </p>
               <button
@@ -374,30 +374,32 @@ export function RevisionView() {
                   setFcStatusFilter('all');
                   setFcIndex(0);
                 }}
-                className="mt-2 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-xs font-medium text-[#0F172A] cursor-pointer"
+                className="mt-2 min-h-[44px] px-3.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-medium text-[var(--color-ink)] cursor-pointer"
               >
                 Reset filters
               </button>
             </SectionCard>
           ) : (
-            <div className="max-w-3xl mx-auto space-y-4">
+            <div className="w-full max-w-3xl mx-auto space-y-4 px-0 sm:px-1">
               {/* Progress indicator */}
-              <div className="flex items-center justify-between text-xs text-[#64748B] px-1">
-                <span className="tabular-nums font-medium text-[#0F172A]">
+              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-[var(--color-secondary)] px-1">
+                <span className="tabular-nums font-mono font-bold text-[var(--color-ink)] shrink-0">
                   Card {safeFcIndex + 1} of {filteredCards.length}
                 </span>
-                <div className="flex items-center gap-2">
-                  <span>Week {activeCard.week}</span>
-                  <span>·</span>
-                  <span>{activeCard.topicLabel}</span>
-                  <span>·</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs min-w-0">
+                  <span className="shrink-0 font-medium text-[var(--color-ink)]">Week {activeCard.week}</span>
+                  <span className="text-[var(--color-line-soft)]">·</span>
+                  <span className="truncate max-w-[130px] sm:max-w-[260px] md:max-w-none text-[var(--color-secondary)]" title={activeCard.topicLabel}>
+                    {activeCard.topicLabel}
+                  </span>
+                  <span className="text-[var(--color-line-soft)]">·</span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-semibold shrink-0 ${
                       activeCardStatus === 'known'
-                        ? 'text-[#047857]'
+                        ? 'text-[var(--color-ink)] font-bold'
                         : activeCardStatus === 'needs_review'
-                          ? 'text-[#B45309]'
-                          : 'text-[#64748B]'
+                          ? 'text-[var(--color-ink)] underline decoration-[var(--color-line)]'
+                          : 'text-[var(--color-secondary)]'
                     }`}
                   >
                     {activeCardStatus === 'known'
@@ -424,116 +426,131 @@ export function RevisionView() {
                 className="perspective-1000 cursor-pointer select-none"
               >
                 <div
-                  className={`relative w-full min-h-[290px] sm:min-h-[310px] transition-transform duration-500 preserve-3d ${
+                  className={`relative w-full min-h-[350px] sm:min-h-[320px] transition-transform duration-500 preserve-3d ${
                     isFlipped ? 'rotate-y-180' : ''
                   }`}
                 >
                   {/* FRONT */}
-                  <div className="absolute inset-0 backface-hidden bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-sm">
-                    <div className="flex items-center justify-between gap-2 text-xs text-[#64748B]">
-                      <span className="font-semibold uppercase tracking-wider text-[#2563EB]">
+                  <div className="absolute inset-0 backface-hidden bg-[var(--color-surface)] border border-[var(--color-line)] p-5 sm:p-8 flex flex-col justify-between shadow-none">
+                    <div className="flex items-center justify-between gap-2 text-xs">
+                      <span className="font-mono font-bold text-[11px] tracking-wider uppercase text-[var(--color-ink)]">
                         Question · Week {activeCard.week}
                       </span>
                       <ProvenanceInline label={activeCard.provenance} />
                     </div>
 
-                    <div className="my-auto py-6 text-center">
-                      <p className="text-lg sm:text-xl font-semibold text-[#0F172A] leading-snug">
+                    <div className="my-auto py-5 sm:py-6 text-center">
+                      <p className="text-base sm:text-xl font-display font-medium text-[var(--color-ink)] leading-snug">
                         {activeCard.front}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#94A3B8]">
-                      <span>Topic: {activeCard.topicLabel}</span>
-                      <span>Click card or press Space to flip</span>
+                    <div className="flex items-center justify-between text-xs text-[var(--color-secondary)] border-t border-[var(--color-line-soft)] pt-3">
+                      <span className="truncate max-w-[180px] sm:max-w-none text-[11px] sm:text-xs">
+                        Topic: {activeCard.topicLabel}
+                      </span>
+                      <span className="text-[11px] shrink-0">
+                        <span className="hidden sm:inline">Click card or press Space to flip</span>
+                        <span className="sm:hidden">Tap card to flip</span>
+                      </span>
                     </div>
                   </div>
 
                   {/* BACK */}
-                  <div className="absolute inset-0 backface-hidden rotate-y-180 bg-[#F8FAFC] border border-[#BFDBFE] rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-sm overflow-y-auto">
-                    <div className="flex items-center justify-between gap-2 text-xs text-[#64748B]">
-                      <span className="font-semibold uppercase tracking-wider text-[#059669]">
+                  <div className="absolute inset-0 backface-hidden rotate-y-180 bg-[var(--color-sunken)] border border-[var(--color-line)] p-5 sm:p-8 flex flex-col justify-between shadow-none overflow-y-auto">
+                    <div className="flex items-center justify-between gap-2 text-xs">
+                      <span className="font-mono font-bold text-[11px] tracking-wider uppercase text-[var(--color-ink)]">
                         Answer &amp; Definition
                       </span>
-                      <span className="text-[#475569]">{activeCard.topicLabel}</span>
+                      <span className="text-[var(--color-secondary)] text-[11px] sm:text-xs truncate max-w-[150px] sm:max-w-none">
+                        {activeCard.topicLabel}
+                      </span>
                     </div>
 
-                    <div className="my-auto py-4 space-y-4">
-                      <p className="text-sm sm:text-base text-[#0F172A] leading-relaxed">
+                    <div className="my-auto py-3 sm:py-4 space-y-3">
+                      <p className="text-xs sm:text-sm text-[var(--color-ink)] leading-relaxed font-body">
                         {activeCard.back}
                       </p>
-                      <div className="p-3.5 rounded-lg bg-white border border-[#E2E8F0]">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[#2563EB] mb-1">
+                      <div className="p-3 bg-[var(--color-surface)] border border-[var(--color-line-soft)]">
+                        <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--color-ink)] mb-1">
                           Practical AI Engineering Nuance
                         </p>
-                        <p className="text-xs sm:text-sm text-[#334155] leading-relaxed">
+                        <p className="text-xs text-[var(--color-secondary)] leading-relaxed">
                           {activeCard.practicalNuance}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#94A3B8]">
-                      <span>Click to flip back</span>
-                      <span>Press K (Known) or R (Needs Review)</span>
+                    <div className="flex items-center justify-between text-xs text-[var(--color-secondary)] border-t border-[var(--color-line-soft)] pt-3">
+                      <span className="text-[11px]">
+                        <span className="hidden sm:inline">Click to flip back</span>
+                        <span className="sm:hidden">Tap to flip back</span>
+                      </span>
+                      <span className="hidden sm:inline text-[11px]">
+                        Press K (Known) or R (Needs Review)
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Action Controls */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
-                <div className="flex items-center gap-2">
+              <div className="space-y-2.5 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-3 pt-1">
+                {/* Navigation Row: On mobile 3 equal columns; on desktop flex */}
+                <div className="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center">
                   <button
                     type="button"
                     onClick={goPrevCard}
-                    className="inline-flex items-center justify-center gap-1 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-xs font-medium text-[#334155] cursor-pointer"
+                    aria-label="Previous flashcard"
+                    className="min-h-[44px] inline-flex items-center justify-center gap-1 px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] active:bg-[var(--color-sunken)] text-xs font-medium text-[var(--color-ink)] cursor-pointer select-none"
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-4 h-4 shrink-0" />
                     <span>Prev</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsFlipped((f) => !f)}
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-xs font-medium text-[#0F172A] cursor-pointer"
+                    aria-label={isFlipped ? 'Flip to question' : 'Flip to answer'}
+                    className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] active:bg-[var(--color-sunken)] text-xs font-medium text-[var(--color-ink)] cursor-pointer select-none"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Flip Card</span>
+                    <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+                    <span>Flip</span>
                   </button>
                   <button
                     type="button"
                     onClick={goNextCard}
-                    className="inline-flex items-center justify-center gap-1 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-xs font-medium text-[#334155] cursor-pointer"
+                    aria-label="Next flashcard"
+                    className="min-h-[44px] inline-flex items-center justify-center gap-1 px-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] active:bg-[var(--color-sunken)] text-xs font-medium text-[var(--color-ink)] cursor-pointer select-none"
                   >
                     <span>Next</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4 shrink-0" />
                   </button>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Mastery Rating Row: On mobile 2 equal columns; on desktop flex */}
+                <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
                   <button
                     type="button"
-                    onClick={() => {
-                      handleMarkCard('needs_review');
-                    }}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] hover:bg-[#FEF3C7] text-[#B45309] text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer"
+                    onClick={() => handleMarkCard('needs_review')}
+                    aria-label="Mark flashcard as needs review"
+                    className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] active:bg-[var(--color-sunken)] text-[var(--color-ink)] text-xs font-semibold cursor-pointer select-none"
                   >
-                    <Flag className="w-3.5 h-3.5" />
+                    <Flag className="w-3.5 h-3.5 shrink-0" />
                     <span>Needs Review</span>
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      handleMarkCard('known');
-                    }}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-[#059669] hover:bg-[#047857] text-white text-xs font-semibold whitespace-nowrap shrink-0 cursor-pointer"
+                    onClick={() => handleMarkCard('known')}
+                    aria-label="Mark flashcard as known"
+                    className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 border border-[var(--color-ink)] bg-[var(--color-ink)] hover:bg-[var(--color-secondary)] active:bg-[var(--color-secondary)] text-[var(--color-paper)] text-xs font-semibold cursor-pointer select-none"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                     <span>Mark Known</span>
                   </button>
                 </div>
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end pt-1">
                 <button
                   type="button"
                   onClick={() =>
@@ -545,7 +562,7 @@ export function RevisionView() {
                       source: 'flashcard',
                     })
                   }
-                  className="text-xs text-[#64748B] hover:text-[#B45309] cursor-pointer"
+                  className="min-h-[44px] py-2 text-xs text-[var(--color-secondary)] hover:text-[var(--color-ink)] cursor-pointer inline-flex items-center gap-1"
                 >
                   + Copy this concept to Weak Concepts Queue
                 </button>

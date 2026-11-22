@@ -179,25 +179,29 @@ export function ProjectsView() {
   };
 
   const renderProjectCard = (proj: ProjectRecord) => (
-    <SectionCard key={proj.id} className="p-5 space-y-3">
+    <SectionCard key={proj.id} className="p-4 sm:p-5 space-y-3">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="space-y-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 text-xs text-[#64748B]">
+          <div className="flex flex-wrap items-center gap-1.5 text-xs text-[var(--color-secondary)]">
             <ProvenanceInline label={proj.provenance} />
             {proj.competencyArea && (
               <>
-                <span>·</span>
-                <span className="font-medium text-[#334155]">{proj.competencyArea}</span>
+                <span className="text-[var(--color-line)]">·</span>
+                <span className="font-mono font-medium text-[var(--color-ink)]">{proj.competencyArea}</span>
               </>
             )}
           </div>
-          <h3 className="text-base font-semibold text-[#0F172A]">{proj.title}</h3>
+          <h3 className="text-base font-display font-semibold text-[var(--color-ink)] break-words">
+            {proj.title}
+          </h3>
           {proj.problemStatement && (
-            <p className="text-xs text-[#475569] leading-relaxed">{proj.problemStatement}</p>
+            <p className="text-xs text-[var(--color-secondary)] leading-relaxed break-words">
+              {proj.problemStatement}
+            </p>
           )}
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <select
             aria-label={`Project status for ${proj.title}`}
             value={proj.status}
@@ -220,12 +224,12 @@ export function ProjectsView() {
                 proj.id
               )
             }
-            className={`px-2.5 py-1.5 rounded-md border text-xs font-medium cursor-pointer ${
+            className={`min-h-[44px] px-2.5 py-1.5 border text-xs font-mono font-medium cursor-pointer transition-colors ${
               proj.status === 'completed'
-                ? 'text-[#047857] bg-[#ECFDF5] border-[#A7F3D0]'
+                ? 'text-[var(--color-ink)] bg-[var(--color-sunken)] border-[var(--color-ink)] font-semibold'
                 : proj.status === 'in_progress'
-                  ? 'text-[#1D4ED8] bg-[#EFF6FF] border-[#BFDBFE]'
-                  : 'text-[#475569] bg-[#F8FAFC] border-[#E2E8F0]'
+                  ? 'text-[var(--color-ink)] bg-[var(--color-surface)] border border-dashed border-[var(--color-line)] font-medium'
+                  : 'text-[var(--color-secondary)] bg-[var(--color-paper)] border-[var(--color-line-soft)]'
             }`}
           >
             <option value="planned">Planned</option>
@@ -236,7 +240,7 @@ export function ProjectsView() {
           <button
             type="button"
             onClick={() => openEditModal(proj)}
-            className="px-2.5 py-1.5 rounded-md border border-[#E2E8F0] text-xs font-medium text-[#334155] hover:bg-[#F8FAFC] cursor-pointer"
+            className="min-h-[44px] min-w-[44px] px-3 py-1.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono font-medium text-[var(--color-ink)] hover:bg-[var(--color-sunken)] cursor-pointer inline-flex items-center justify-center transition-colors"
           >
             Edit
           </button>
@@ -244,52 +248,58 @@ export function ProjectsView() {
             type="button"
             aria-label={`Delete ${proj.title}`}
             onClick={() => deleteProject(proj.id)}
-            className="p-1.5 text-[#94A3B8] hover:text-[#DC2626] rounded hover:bg-[#FEF2F2] cursor-pointer"
+            className="min-h-[44px] min-w-[44px] px-2.5 py-1.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono font-medium text-[var(--color-secondary)] hover:text-[var(--color-ink)] hover:border-[var(--color-ink)] hover:bg-[var(--color-sunken)] cursor-pointer inline-flex items-center justify-center gap-1.5 transition-colors"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Delete</span>
           </button>
         </div>
       </div>
 
       {proj.skills.length > 0 && (
-        <p className="text-xs text-[#64748B]">
-          <span className="font-medium text-[#334155]">Skills:</span> {proj.skills.join(', ')}
+        <p className="text-xs text-[var(--color-secondary)] break-words">
+          <span className="font-mono font-semibold text-[var(--color-ink)]">Skills:</span> {proj.skills.join(', ')}
         </p>
       )}
       {proj.datasetSource && (
-        <p className="text-xs text-[#64748B]">
-          <span className="font-medium text-[#334155]">Dataset / Input:</span> {proj.datasetSource}
+        <p className="text-xs text-[var(--color-secondary)] break-words">
+          <span className="font-mono font-semibold text-[var(--color-ink)]">Dataset / Input:</span> {proj.datasetSource}
         </p>
       )}
       {proj.deliverables && (
-        <p className="text-xs text-[#64748B]">
-          <span className="font-medium text-[#334155]">Deliverables:</span> {proj.deliverables}
+        <p className="text-xs text-[var(--color-secondary)] break-words">
+          <span className="font-mono font-semibold text-[var(--color-ink)]">Deliverables:</span> {proj.deliverables}
         </p>
       )}
       {proj.completionCriteria && (
-        <p className="text-xs text-[#64748B]">
-          <span className="font-medium text-[#334155]">Completion criteria:</span>{' '}
+        <p className="text-xs text-[var(--color-secondary)] break-words">
+          <span className="font-mono font-semibold text-[var(--color-ink)]">Completion criteria:</span>{' '}
           {proj.completionCriteria}
         </p>
       )}
 
       {proj.milestones.length > 0 && (
-        <div className="pt-2 border-t border-[#F1F5F9] space-y-1.5">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748B]">
+        <div className="pt-2 border-t border-[var(--color-line-soft)] space-y-1.5">
+          <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--color-secondary)]">
             Milestones
           </p>
           {proj.milestones.map((m, idx) => {
             const checked = m.startsWith('[x] ');
             const label = m.replace(/^\[[ x]\]\s*/, '');
             return (
-              <label key={idx} className="flex items-center gap-2 text-xs text-[#334155] cursor-pointer">
+              <label
+                key={idx}
+                className="min-h-[38px] sm:min-h-[32px] flex items-start gap-2.5 text-xs text-[var(--color-ink)] cursor-pointer py-1 select-none"
+              >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => handleToggleMilestone(proj, idx)}
-                  className="h-3.5 w-3.5 rounded border-[#CBD5E1] text-[#2563EB]"
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded-none border border-[var(--color-line)] accent-[var(--color-ink)]"
                 />
-                <span className={checked ? 'line-through text-[#94A3B8]' : ''}>{label}</span>
+                <span className={`break-words leading-snug ${checked ? 'line-through text-[var(--color-secondary)] opacity-60' : ''}`}>
+                  {label}
+                </span>
               </label>
             );
           })}
@@ -297,15 +307,15 @@ export function ProjectsView() {
       )}
 
       {proj.githubUrl && (
-        <div className="pt-2 border-t border-[#F1F5F9]">
+        <div className="pt-2 border-t border-[var(--color-line-soft)]">
           <a
             href={proj.githubUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2563EB] hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[var(--color-ink)] underline hover:opacity-80 break-all"
           >
-            <span>{proj.githubUrl}</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <span className="break-all">{proj.githubUrl}</span>
+            <ExternalLink className="w-3.5 h-3.5 shrink-0" />
           </a>
         </div>
       )}
@@ -317,10 +327,10 @@ export function ProjectsView() {
       {/* Header + Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#0F172A] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-display font-medium text-[var(--color-ink)] tracking-tight">
             Projects &amp; Portfolio
           </h1>
-          <p className="text-sm text-[#64748B] mt-1">
+          <p className="text-sm text-[var(--color-secondary)] mt-1 max-w-prose">
             Track official DataMites projects (minimum{' '}
             {DATAMITES_PROGRAM_FACTS.minimumOfficialProjects} required), 3-month internship
             deliverables, and supplementary portfolio builds.
@@ -330,7 +340,7 @@ export function ProjectsView() {
         <button
           type="button"
           onClick={() => setModalForm(emptyForm(activeTab))}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium whitespace-nowrap shrink-0 self-start sm:self-auto cursor-pointer"
+          className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[var(--color-signal)] hover:brightness-95 text-[var(--color-ink)] border border-[var(--color-ink)] text-xs font-mono font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>Add Project</span>
@@ -338,7 +348,7 @@ export function ProjectsView() {
       </div>
 
       {/* Sub-tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-[#E2E8F0] pb-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 border-b border-[var(--color-line-soft)] pb-2">
         {(
           [
             {
@@ -359,10 +369,10 @@ export function ProjectsView() {
             key={t.id}
             type="button"
             onClick={() => setActiveTab(t.id)}
-            className={`px-3.5 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+            className={`min-h-[44px] px-3 sm:px-3.5 py-2 text-xs font-mono transition-colors text-center cursor-pointer border ${
               activeTab === t.id
-                ? 'bg-[#0F172A] text-white'
-                : 'bg-white border border-[#E2E8F0] text-[#475569] hover:bg-[#F8FAFC]'
+                ? 'bg-[var(--color-ink)] text-[var(--color-paper)] border-[var(--color-ink)] font-semibold'
+                : 'bg-[var(--color-surface)] border-[var(--color-line)] text-[var(--color-secondary)] hover:bg-[var(--color-sunken)]'
             }`}
           >
             {t.label}
@@ -373,31 +383,31 @@ export function ProjectsView() {
       {/* TAB 1: Official DataMites Projects */}
       {activeTab === 'official_datamites' && (
         <div className="space-y-6">
-          <SectionCard className="p-5 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-base font-semibold text-[#0F172A]">
+          <SectionCard className="p-4 sm:p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="min-w-0">
+                <h2 className="text-base font-display font-medium text-[var(--color-ink)]">
                   Official Project Milestone ({officialCompleted} /{' '}
                   {DATAMITES_PROGRAM_FACTS.minimumOfficialProjects} Completed)
                 </h2>
-                <p className="text-xs text-[#64748B] mt-0.5">
+                <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                   Brochure p. 28 requires a minimum of 5 real-world industry projects across the 8
                   competency areas below.
                 </p>
               </div>
-              <div className="w-48 shrink-0">
+              <div className="w-full sm:w-48 shrink-0">
                 <ProgressBar
                   value={officialCompleted}
                   max={DATAMITES_PROGRAM_FACTS.minimumOfficialProjects}
-                  colorClass="bg-[#2563EB]"
+                  colorClass="bg-[var(--color-ink)]"
                 />
               </div>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] flex items-start gap-2.5 text-xs text-[#92400E]">
-              <AlertCircle className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
+            <div className="p-3 sm:p-3.5 border-l-4 border-[var(--color-line)] bg-[var(--color-sunken)] flex items-start gap-2.5 text-xs text-[var(--color-secondary)]">
+              <AlertCircle className="w-4 h-4 text-[var(--color-secondary)] shrink-0 mt-0.5" />
               <p>
-                <span className="font-semibold">UNVERIFIED batch specifics:</span> Official batch
+                <span className="font-mono font-bold text-[var(--color-ink)]">UNVERIFIED batch specifics:</span> Official batch
                 project titles, datasets, and grading rubrics are not listed in the brochure. Add
                 your cohort&apos;s assigned DataMites projects here as your mentors release them.
               </p>
@@ -409,23 +419,23 @@ export function ProjectsView() {
                 return (
                   <div
                     key={area.id}
-                    className={`p-3 rounded-lg border text-xs ${
+                    className={`p-3 border text-xs transition-colors ${
                       done
-                        ? 'bg-[#ECFDF5] border-[#A7F3D0] text-[#047857]'
-                        : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#334155]'
+                        ? 'bg-[var(--color-project)]/35 border-[var(--color-line)] text-[var(--color-ink)]'
+                        : 'bg-[var(--color-surface)] border-[var(--color-line-soft)] text-[var(--color-secondary)]'
                     }`}
                   >
                     <div className="flex items-center gap-1.5 font-semibold">
                       <CheckCircle2
                         className={`w-3.5 h-3.5 shrink-0 ${
-                          done ? 'text-[#059669]' : 'text-[#CBD5E1]'
+                          done ? 'text-[var(--color-ink)]' : 'text-[var(--color-line-soft)]'
                         }`}
                       />
-                      <span>
+                      <span className="font-mono">
                         {area.number}. {area.title}
                       </span>
                     </div>
-                    <p className="mt-1 text-[11px] opacity-85">{area.description}</p>
+                    <p className="mt-1 text-[11px] leading-snug opacity-90 break-words">{area.description}</p>
                   </div>
                 );
               })}
@@ -434,11 +444,11 @@ export function ProjectsView() {
 
           {officialProjects.length === 0 ? (
             <SectionCard className="p-8 text-center">
-              <FolderGit2 className="w-8 h-8 text-[#94A3B8] mx-auto mb-2" />
-              <p className="text-sm font-medium text-[#0F172A]">
+              <FolderGit2 className="w-8 h-8 text-[var(--color-secondary)] mx-auto mb-2" />
+              <p className="text-sm font-display font-medium text-[var(--color-ink)]">
                 No official DataMites projects logged yet
               </p>
-              <p className="text-xs text-[#64748B] mt-1">
+              <p className="text-xs text-[var(--color-secondary)] mt-1">
                 Click &ldquo;Add Project&rdquo; once your batch assigns its first official
                 industry project.
               </p>
@@ -452,12 +462,12 @@ export function ProjectsView() {
       {/* TAB 2: Internship Deliverables */}
       {activeTab === 'internship' && (
         <div className="space-y-6">
-          <SectionCard className="p-5 space-y-4">
+          <SectionCard className="p-4 sm:p-5 space-y-4">
             <div>
-              <h2 className="text-base font-semibold text-[#0F172A]">
+              <h2 className="text-base font-display font-medium text-[var(--color-ink)]">
                 3-Month Applied AI Internship Tracker
               </h2>
-              <p className="text-xs text-[#64748B] mt-0.5">
+              <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                 Brochure p. 28: {DATAMITES_PROGRAM_FACTS.internshipMonths} months post-training
                 internship with {DATAMITES_PROGRAM_FACTS.liveProjectMentoringHours} hours of live
                 project mentoring, real deliverables, certificate, and experience letter.
@@ -465,50 +475,50 @@ export function ProjectsView() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2.5 p-4 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/60">
-                <label className="flex items-center gap-2.5 text-sm text-[#0F172A] cursor-pointer">
+              <div className="space-y-2 p-3.5 sm:p-4 border border-[var(--color-line-soft)] bg-[var(--color-sunken)]/40">
+                <label className="min-h-[44px] flex items-center gap-3 text-xs sm:text-sm text-[var(--color-ink)] cursor-pointer select-none py-1">
                   <input
                     type="checkbox"
                     checked={state.profile.internshipIntakeDone}
                     onChange={(e) =>
                       updateProfile({ internshipIntakeDone: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB]"
+                    className="h-4 w-4 shrink-0 rounded-none border border-[var(--color-line)] accent-[var(--color-ink)]"
                   />
                   <span>Internship intake &amp; team onboarding completed</span>
                 </label>
 
-                <label className="flex items-center gap-2.5 text-sm text-[#0F172A] cursor-pointer">
+                <label className="min-h-[44px] flex items-center gap-3 text-xs sm:text-sm text-[var(--color-ink)] cursor-pointer select-none py-1">
                   <input
                     type="checkbox"
                     checked={state.profile.internshipCertificateDone}
                     onChange={(e) =>
                       updateProfile({ internshipCertificateDone: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB]"
+                    className="h-4 w-4 shrink-0 rounded-none border border-[var(--color-line)] accent-[var(--color-ink)]"
                   />
                   <span>Internship Certificate issued</span>
                 </label>
 
-                <label className="flex items-center gap-2.5 text-sm text-[#0F172A] cursor-pointer">
+                <label className="min-h-[44px] flex items-center gap-3 text-xs sm:text-sm text-[var(--color-ink)] cursor-pointer select-none py-1">
                   <input
                     type="checkbox"
                     checked={state.profile.internshipExperienceLetterDone}
                     onChange={(e) =>
                       updateProfile({ internshipExperienceLetterDone: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB]"
+                    className="h-4 w-4 shrink-0 rounded-none border border-[var(--color-line)] accent-[var(--color-ink)]"
                   />
                   <span>Experience Letter issued</span>
                 </label>
               </div>
 
-              <div className="p-4 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/60 space-y-3">
+              <div className="p-3.5 sm:p-4 border border-[var(--color-line-soft)] bg-[var(--color-sunken)]/40 space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-[#0F172A]">
+                  <label className="text-xs font-mono font-semibold text-[var(--color-ink)]">
                     Live Project Mentoring Hours
                   </label>
-                  <span className="text-xs font-semibold text-[#2563EB] tabular-nums">
+                  <span className="text-xs font-mono font-semibold text-[var(--color-ink)] tabular-nums">
                     {state.profile.internshipMentoringHours} /{' '}
                     {DATAMITES_PROGRAM_FACTS.liveProjectMentoringHours}h
                   </span>
@@ -516,7 +526,7 @@ export function ProjectsView() {
                 <ProgressBar
                   value={state.profile.internshipMentoringHours}
                   max={DATAMITES_PROGRAM_FACTS.liveProjectMentoringHours}
-                  colorClass="bg-[#2563EB]"
+                  colorClass="bg-[var(--color-ink)]"
                 />
                 <div className="flex items-center gap-2">
                   <input
@@ -529,9 +539,9 @@ export function ProjectsView() {
                         internshipMentoringHours: Math.max(0, Math.min(200, Number(e.target.value) || 0)),
                       })
                     }
-                    className="w-24 px-2.5 py-1.5 rounded border border-[#CBD5E1] bg-white text-sm text-[#0F172A] tabular-nums"
+                    className="w-24 min-h-[44px] px-2.5 py-1.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] tabular-nums font-mono"
                   />
-                  <span className="text-xs text-[#64748B]">hours logged</span>
+                  <span className="text-xs text-[var(--color-secondary)]">hours logged</span>
                 </div>
               </div>
             </div>
@@ -539,8 +549,8 @@ export function ProjectsView() {
 
           {internshipProjects.length === 0 ? (
             <SectionCard className="p-8 text-center">
-              <p className="text-sm font-medium text-[#0F172A]">No internship deliverables logged</p>
-              <p className="text-xs text-[#64748B] mt-1">
+              <p className="text-sm font-display font-medium text-[var(--color-ink)]">No internship deliverables logged</p>
+              <p className="text-xs text-[var(--color-secondary)] mt-1">
                 Log your internship sprint deliverables, PR links, and evaluation milestones here.
               </p>
             </SectionCard>
@@ -553,13 +563,13 @@ export function ProjectsView() {
       {/* TAB 3: Supplementary Personal Projects */}
       {activeTab === 'supplementary_personal' && (
         <div className="space-y-6">
-          <SectionCard className="p-5 space-y-4">
-            <div className="flex items-center justify-between gap-3">
+          <SectionCard className="p-4 sm:p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-semibold text-[#0F172A]">
+                <h2 className="text-base font-display font-medium text-[var(--color-ink)]">
                   Recommended Stage-Aligned Starter Templates
                 </h2>
-                <p className="text-xs text-[#64748B] mt-0.5">
+                <p className="text-xs text-[var(--color-secondary)] mt-0.5">
                   Proposed supplementary projects unlocked progressively as you complete core
                   weeks. Clearly labeled as supplementary practice — never official DataMites
                   projects.
@@ -575,29 +585,29 @@ export function ProjectsView() {
                 return (
                   <div
                     key={tpl.id}
-                    className="p-4 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/50 flex flex-col justify-between gap-3"
+                    className="p-4 border border-[var(--color-line)] bg-[var(--color-surface)] flex flex-col justify-between gap-3"
                   >
                     <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-2 text-[11px]">
-                        <span className="font-semibold text-[#2563EB] tabular-nums">
+                      <div className="flex items-center justify-between gap-2 text-[11px] font-mono">
+                        <span className="font-semibold text-[var(--color-ink)] tabular-nums">
                           Suggested after Week {tpl.unlockAfterWeek}
                         </span>
-                        <span className={unlocked ? 'text-[#059669]' : 'text-[#94A3B8]'}>
+                        <span className={unlocked ? 'text-[var(--color-ink)] font-bold' : 'text-[var(--color-secondary)]'}>
                           {unlocked ? 'Ready now' : 'Upcoming'}
                         </span>
                       </div>
-                      <h3 className="text-sm font-semibold text-[#0F172A]">{tpl.title}</h3>
-                      <p className="text-xs text-[#475569] line-clamp-3">{tpl.problemStatement}</p>
-                      <p className="text-[11px] text-[#64748B]">{tpl.competencyArea}</p>
+                      <h3 className="text-sm font-display font-semibold text-[var(--color-ink)] break-words">{tpl.title}</h3>
+                      <p className="text-xs text-[var(--color-secondary)] line-clamp-3 leading-relaxed break-words">{tpl.problemStatement}</p>
+                      <p className="text-[11px] font-mono text-[var(--color-secondary)] break-words">{tpl.competencyArea}</p>
                     </div>
                     <button
                       type="button"
                       disabled={alreadyAdded}
                       onClick={() => handleUseTemplate(tpl)}
-                      className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                      className={`min-h-[44px] w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono font-medium transition-colors cursor-pointer border ${
                         alreadyAdded
-                          ? 'bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0] cursor-default'
-                          : 'bg-white border border-[#E2E8F0] hover:bg-[#EFF6FF] hover:border-[#BFDBFE] text-[#0F172A]'
+                          ? 'bg-[var(--color-sunken)] text-[var(--color-secondary)] border-[var(--color-line-soft)] cursor-default'
+                          : 'bg-[var(--color-surface)] border border-[var(--color-line)] hover:bg-[var(--color-sunken)] text-[var(--color-ink)]'
                       }`}
                     >
                       <Sparkles className="w-3.5 h-3.5" />
@@ -617,208 +627,223 @@ export function ProjectsView() {
 
       {/* Add / Edit Project Modal */}
       {modalForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F172A]/40 p-4 overflow-y-auto">
-          <div className="bg-white border border-[#E2E8F0] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="px-5 py-4 border-b border-[#E2E8F0] flex items-center justify-between">
-              <h2 className="text-base font-semibold text-[#0F172A]">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-ink)]/40 p-3 sm:p-4 overflow-y-auto"
+        >
+          <div className="bg-[var(--color-surface)] border border-[var(--color-line)] w-full max-w-2xl max-h-[92vh] sm:max-h-[90vh] flex flex-col shadow-none my-auto">
+            {/* Modal Header: Accessible & Fixed */}
+            <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[var(--color-line-soft)] flex items-center justify-between shrink-0 bg-[var(--color-surface)]">
+              <h2 id="project-modal-title" className="text-base sm:text-lg font-display font-medium text-[var(--color-ink)]">
                 {modalForm.id ? 'Edit Project' : 'Add Project'}
               </h2>
               <button
                 type="button"
                 onClick={() => setModalForm(null)}
-                className="p-1 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+                aria-label="Close dialog"
+                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-[var(--color-secondary)] hover:text-[var(--color-ink)] cursor-pointer -mr-2 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitModal} className="p-5 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">Category</label>
-                  <select
-                    value={modalForm.category}
-                    onChange={(e) => {
-                      const cat = e.target.value as ProjectRecord['category'];
-                      setModalForm({
-                        ...modalForm,
-                        category: cat,
-                        provenance:
-                          cat === 'supplementary_personal'
-                            ? 'SUPPLEMENTARY_PRACTICE_PROPOSED'
-                            : 'DATAMITES_OFFICIAL',
-                      });
-                    }}
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-sm text-[#0F172A]"
-                  >
-                    <option value="official_datamites">Official DataMites Project</option>
-                    <option value="internship">Internship Deliverable</option>
-                    <option value="supplementary_personal">Supplementary Personal Project</option>
-                  </select>
+            {/* Modal Form: Scrollable internal area */}
+            <form onSubmit={handleSubmitModal} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+              <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 overscroll-contain">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Category
+                    </label>
+                    <select
+                      value={modalForm.category}
+                      onChange={(e) => {
+                        const cat = e.target.value as ProjectRecord['category'];
+                        setModalForm({
+                          ...modalForm,
+                          category: cat,
+                          provenance:
+                            cat === 'supplementary_personal'
+                              ? 'SUPPLEMENTARY_PRACTICE_PROPOSED'
+                              : 'DATAMITES_OFFICIAL',
+                        });
+                      }}
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    >
+                      <option value="official_datamites">Official DataMites Project</option>
+                      <option value="internship">Internship Deliverable</option>
+                      <option value="supplementary_personal">Supplementary Personal Project</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Competency Area
+                    </label>
+                    <select
+                      value={modalForm.competencyArea}
+                      onChange={(e) =>
+                        setModalForm({ ...modalForm, competencyArea: e.target.value })
+                      }
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    >
+                      {OFFICIAL_COMPETENCY_AREAS.map((a) => (
+                        <option key={a.id} value={a.title}>
+                          {a.number}. {a.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">
-                    Competency Area
-                  </label>
-                  <select
-                    value={modalForm.competencyArea}
-                    onChange={(e) =>
-                      setModalForm({ ...modalForm, competencyArea: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-sm text-[#0F172A]"
-                  >
-                    {OFFICIAL_COMPETENCY_AREAS.map((a) => (
-                      <option key={a.id} value={a.title}>
-                        {a.number}. {a.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-[#334155] mb-1">
-                  Project Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={modalForm.title}
-                  onChange={(e) => setModalForm({ ...modalForm, title: e.target.value })}
-                  placeholder="e.g., Customer Churn Classifier with MLflow Tracking"
-                  className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-[#334155] mb-1">
-                  Problem Statement
-                </label>
-                <textarea
-                  rows={2}
-                  value={modalForm.problemStatement}
-                  onChange={(e) =>
-                    setModalForm({ ...modalForm, problemStatement: e.target.value })
-                  }
-                  className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">
-                    Skills (comma-separated)
+                  <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                    Project Title
                   </label>
                   <input
                     type="text"
-                    value={modalForm.skillsCsv}
-                    onChange={(e) => setModalForm({ ...modalForm, skillsCsv: e.target.value })}
-                    placeholder="Python, Scikit-Learn, FastAPI"
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
+                    required
+                    value={modalForm.title}
+                    onChange={(e) => setModalForm({ ...modalForm, title: e.target.value })}
+                    placeholder="e.g., Customer Churn Classifier with MLflow Tracking"
+                    className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">
-                    Dataset / Input Source
+                  <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                    Problem Statement
                   </label>
-                  <input
-                    type="text"
-                    value={modalForm.datasetSource}
+                  <textarea
+                    rows={3}
+                    value={modalForm.problemStatement}
                     onChange={(e) =>
-                      setModalForm({ ...modalForm, datasetSource: e.target.value })
+                      setModalForm({ ...modalForm, problemStatement: e.target.value })
                     }
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
+                    className="w-full p-3 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)] leading-relaxed"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Skills (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={modalForm.skillsCsv}
+                      onChange={(e) => setModalForm({ ...modalForm, skillsCsv: e.target.value })}
+                      placeholder="Python, Scikit-Learn, FastAPI"
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Dataset / Input Source
+                    </label>
+                    <input
+                      type="text"
+                      value={modalForm.datasetSource}
+                      onChange={(e) =>
+                        setModalForm({ ...modalForm, datasetSource: e.target.value })
+                      }
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                    Milestones (one per line)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={modalForm.milestonesText}
+                    onChange={(e) =>
+                      setModalForm({ ...modalForm, milestonesText: e.target.value })
+                    }
+                    className="w-full p-3 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)] leading-relaxed"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Deliverables
+                    </label>
+                    <input
+                      type="text"
+                      value={modalForm.deliverables}
+                      onChange={(e) =>
+                        setModalForm({ ...modalForm, deliverables: e.target.value })
+                      }
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      GitHub / Demo URL
+                    </label>
+                    <input
+                      type="url"
+                      value={modalForm.githubUrl}
+                      onChange={(e) => setModalForm({ ...modalForm, githubUrl: e.target.value })}
+                      placeholder="https://github.com/..."
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Completion Criteria
+                    </label>
+                    <input
+                      type="text"
+                      value={modalForm.completionCriteria}
+                      onChange={(e) =>
+                        setModalForm({ ...modalForm, completionCriteria: e.target.value })
+                      }
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono font-medium text-[var(--color-secondary)] mb-1.5">
+                      Status
+                    </label>
+                    <select
+                      value={modalForm.status}
+                      onChange={(e) =>
+                        setModalForm({
+                          ...modalForm,
+                          status: e.target.value as ProjectRecord['status'],
+                        })
+                      }
+                      className="w-full min-h-[44px] px-3 py-2.5 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+                    >
+                      <option value="planned">Planned</option>
+                      <option value="in_progress">In progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-[#334155] mb-1">
-                  Milestones (one per line)
-                </label>
-                <textarea
-                  rows={3}
-                  value={modalForm.milestonesText}
-                  onChange={(e) =>
-                    setModalForm({ ...modalForm, milestonesText: e.target.value })
-                  }
-                  className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-xs font-mono text-[#0F172A]"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">
-                    Deliverables
-                  </label>
-                  <input
-                    type="text"
-                    value={modalForm.deliverables}
-                    onChange={(e) =>
-                      setModalForm({ ...modalForm, deliverables: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">
-                    GitHub / Demo URL
-                  </label>
-                  <input
-                    type="url"
-                    value={modalForm.githubUrl}
-                    onChange={(e) => setModalForm({ ...modalForm, githubUrl: e.target.value })}
-                    placeholder="https://github.com/..."
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">
-                    Completion Criteria
-                  </label>
-                  <input
-                    type="text"
-                    value={modalForm.completionCriteria}
-                    onChange={(e) =>
-                      setModalForm({ ...modalForm, completionCriteria: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-[#334155] mb-1">Status</label>
-                  <select
-                    value={modalForm.status}
-                    onChange={(e) =>
-                      setModalForm({
-                        ...modalForm,
-                        status: e.target.value as ProjectRecord['status'],
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-sm text-[#0F172A]"
-                  >
-                    <option value="planned">Planned</option>
-                    <option value="in_progress">In progress</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t border-[#E2E8F0]">
+              {/* Modal Actions Footer: Fixed & Reachable */}
+              <div className="p-4 sm:px-6 py-3 border-t border-[var(--color-line-soft)] flex flex-col-reverse sm:flex-row justify-end gap-2.5 sm:gap-2 shrink-0 bg-[var(--color-surface)]">
                 <button
                   type="button"
                   onClick={() => setModalForm(null)}
-                  className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-4 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono font-medium text-[var(--color-secondary)] hover:bg-[var(--color-sunken)] hover:text-[var(--color-ink)] cursor-pointer inline-flex items-center justify-center transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-5 py-2 bg-[var(--color-signal)] border border-[var(--color-ink)] text-xs font-mono font-bold text-[var(--color-ink)] hover:brightness-95 cursor-pointer inline-flex items-center justify-center transition-colors"
                 >
                   Save Project
                 </button>
