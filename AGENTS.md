@@ -2,13 +2,13 @@
 
 > **CRITICAL DIRECTIVE FOR ALL AI AGENTS AND DEVELOPERS:**  
 > Before making any changes to this codebase, you MUST read the following foundational documents in `developer/`:
-> 1. [developer/AGENTS.md](file:///d:/ai-engineer-command-center/developer/AGENTS.md) — Standing operational rules, constraints, protected code paths, design system requirements, and verification protocols.
-> 2. [developer/README.md](file:///d:/ai-engineer-command-center/developer/README.md) — Full project architecture, handover documentation, local-first data sync mechanics, and developer guide.
+> 1. [developer/AGENTS.md](developer/AGENTS.md) — Standing operational rules, constraints, protected code paths, design system requirements, and verification protocols.
+> 2. [developer/README.md](developer/README.md) — Full project architecture, handover documentation, local-first data sync mechanics, and developer guide.
 > 3. Context-specific documentation in `developer/`:
->    - [developer/DEVELOPER_GUIDE.md](file:///d:/ai-engineer-command-center/developer/DEVELOPER_GUIDE.md) — Implementation details, state shape, codecs, conflict resolution, and schema extension checklists.
->    - [developer/WEBSITE_THEME_AND_UI_UX_DESIGN_SYSTEM.md](file:///d:/ai-engineer-command-center/developer/WEBSITE_THEME_AND_UI_UX_DESIGN_SYSTEM.md) — Canonical Paper & Signal design tokens, typography scales, and visual rules.
->    - [developer/PAPER_AND_SIGNAL_IMPLEMENTATION_BLUEPRINT.md](file:///d:/ai-engineer-command-center/developer/PAPER_AND_SIGNAL_IMPLEMENTATION_BLUEPRINT.md) — Architectural component blueprint and implementation history.
->    - [developer/ui_ux_audit_report.md](file:///d:/ai-engineer-command-center/developer/ui_ux_audit_report.md) — Baseline UX audit findings, responsive standards, and accessibility requirements.
+>    - [developer/DEVELOPER_GUIDE.md](developer/DEVELOPER_GUIDE.md) — Implementation details, state shape, codecs, conflict resolution, and schema extension checklists.
+>    - [developer/WEBSITE_THEME_AND_UI_UX_DESIGN_SYSTEM.md](developer/WEBSITE_THEME_AND_UI_UX_DESIGN_SYSTEM.md) — Canonical Paper & Signal design tokens, typography scales, and visual rules.
+>    - [developer/PAPER_AND_SIGNAL_IMPLEMENTATION_BLUEPRINT.md](developer/PAPER_AND_SIGNAL_IMPLEMENTATION_BLUEPRINT.md) — Architectural component blueprint and implementation history.
+>    - [developer/ui_ux_audit_report.md](developer/ui_ux_audit_report.md) — Baseline UX audit findings, responsive standards, and accessibility requirements.
 
 ---
 
