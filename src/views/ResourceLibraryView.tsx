@@ -69,26 +69,27 @@ export function ResourceLibraryView() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#0F172A] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-display font-medium text-[var(--color-ink)] tracking-tight">
             Supplementary Resource Library
           </h1>
-          <p className="text-sm text-[#64748B] mt-1">
+          <p className="text-sm text-[var(--color-secondary)] mt-1 max-w-3xl">
             Verified catalogue of {RESOURCE_COUNTS.total} supplementary entries (
             {RESOURCE_COUNTS.pythonBootcamp} CWH Python · {RESOURCE_COUNTS.dataScienceHindi} CWH
             Data Science [Hindi] · {RESOURCE_COUNTS.ssdCurated} curated SSD entries). Never
             complete every file — use strictly to reinforce your current DataMites week.
           </p>
         </div>
-        <div className="text-xs text-[#475569] tabular-nums shrink-0">
-          Watched: <span className="font-semibold text-[#0F172A]">{watchedTotal}</span> /{' '}
+        <div className="text-xs font-mono text-[var(--color-secondary)] tabular-nums shrink-0">
+          Watched: <span className="font-bold text-[var(--color-ink)]">{watchedTotal}</span> /{' '}
           {RESOURCE_COUNTS.total}
         </div>
       </div>
 
-      {/* Filters */}
-      <SectionCard className="p-4 space-y-3">
+      {/* Search & Filters */}
+      <SectionCard className="p-4 sm:p-5 space-y-4 border border-[var(--color-line)] bg-[var(--color-surface)]">
+        {/* Search First */}
         <div className="relative">
-          <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--color-secondary)] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={query}
@@ -97,11 +98,94 @@ export function ResourceLibraryView() {
               setVisibleLimit(PAGE_SIZE);
             }}
             placeholder="Search by lecture title, section, lecture number, or SSD folder path..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E2E8F0] text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB]"
+            className="w-full min-h-[44px] pl-9 pr-3 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] font-body placeholder:text-[var(--color-secondary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
           />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        {/* Mobile-friendly horizontally scrollable quick filter chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs font-mono">
+          <button
+            type="button"
+            onClick={() => {
+              setWeekFilter('all');
+              setSourceFilter('all');
+              setClassFilter('all');
+              setLanguageFilter('all');
+              setWatchFilter('all');
+              setVisibleLimit(PAGE_SIZE);
+            }}
+            className={`min-h-[44px] px-3 py-1.5 border whitespace-nowrap cursor-pointer transition-colors ${
+              weekFilter === 'all' &&
+              sourceFilter === 'all' &&
+              classFilter === 'all' &&
+              languageFilter === 'all' &&
+              watchFilter === 'all'
+                ? 'bg-[var(--color-ink)] text-[var(--color-paper)] border-[var(--color-ink)] font-bold'
+                : 'bg-[var(--color-surface)] text-[var(--color-secondary)] border-[var(--color-line-soft)] hover:border-[var(--color-line)] hover:text-[var(--color-ink)]'
+            }`}
+          >
+            All Resources
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setWeekFilter(weekFilter === activeWeek ? 'all' : activeWeek);
+              setVisibleLimit(PAGE_SIZE);
+            }}
+            className={`min-h-[44px] px-3 py-1.5 border whitespace-nowrap cursor-pointer transition-colors ${
+              weekFilter === activeWeek
+                ? 'bg-[var(--color-signal)] text-[var(--color-ink)] border-[var(--color-ink)] font-bold'
+                : 'bg-[var(--color-surface)] text-[var(--color-secondary)] border-[var(--color-line-soft)] hover:border-[var(--color-line)] hover:text-[var(--color-ink)]'
+            }`}
+          >
+            Week {activeWeek} (Current)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setClassFilter(classFilter === 'ESSENTIAL' ? 'all' : 'ESSENTIAL');
+              setVisibleLimit(PAGE_SIZE);
+            }}
+            className={`min-h-[44px] px-3 py-1.5 border whitespace-nowrap cursor-pointer transition-colors ${
+              classFilter === 'ESSENTIAL'
+                ? 'bg-[var(--color-ink)] text-[var(--color-paper)] border-[var(--color-ink)] font-bold'
+                : 'bg-[var(--color-surface)] text-[var(--color-secondary)] border-[var(--color-line-soft)] hover:border-[var(--color-line)] hover:text-[var(--color-ink)]'
+            }`}
+          >
+            Essential Only
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setLanguageFilter(languageFilter === 'Hindi' ? 'all' : 'Hindi');
+              setVisibleLimit(PAGE_SIZE);
+            }}
+            className={`min-h-[44px] px-3 py-1.5 border whitespace-nowrap cursor-pointer transition-colors ${
+              languageFilter === 'Hindi'
+                ? 'bg-[var(--color-ink)] text-[var(--color-paper)] border-[var(--color-ink)] font-bold'
+                : 'bg-[var(--color-surface)] text-[var(--color-secondary)] border-[var(--color-line-soft)] hover:border-[var(--color-line)] hover:text-[var(--color-ink)]'
+            }`}
+          >
+            Hindi Lessons
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setWatchFilter(watchFilter === 'unwatched' ? 'all' : 'unwatched');
+              setVisibleLimit(PAGE_SIZE);
+            }}
+            className={`min-h-[44px] px-3 py-1.5 border whitespace-nowrap cursor-pointer transition-colors ${
+              watchFilter === 'unwatched'
+                ? 'bg-[var(--color-ink)] text-[var(--color-paper)] border-[var(--color-ink)] font-bold'
+                : 'bg-[var(--color-surface)] text-[var(--color-secondary)] border-[var(--color-line-soft)] hover:border-[var(--color-line)] hover:text-[var(--color-ink)]'
+            }`}
+          >
+            Unwatched Only
+          </button>
+        </div>
+
+        {/* 5 Dropdown Filters */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
           <select
             aria-label="Filter by mapped DataMites week"
             value={weekFilter}
@@ -109,7 +193,7 @@ export function ResourceLibraryView() {
               setWeekFilter(e.target.value === 'all' ? 'all' : Number(e.target.value));
               setVisibleLimit(PAGE_SIZE);
             }}
-            className="px-2.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+            className="min-h-[44px] px-2.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] cursor-pointer focus:outline-none focus:border-[var(--color-ink)]"
           >
             <option value="all">All Mapped Weeks</option>
             {Array.from({ length: 20 }, (_, i) => i + 1).map((w) => (
@@ -126,7 +210,7 @@ export function ResourceLibraryView() {
               setSourceFilter(e.target.value as 'all' | ResourceItem['source']);
               setVisibleLimit(PAGE_SIZE);
             }}
-            className="px-2.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+            className="min-h-[44px] px-2.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] cursor-pointer focus:outline-none focus:border-[var(--color-ink)]"
           >
             <option value="all">All Sources</option>
             <option value="CODEWITHHARRY_PYTHON">Tier 2 · CWH Python Bootcamp</option>
@@ -142,7 +226,7 @@ export function ResourceLibraryView() {
               setClassFilter(e.target.value as 'all' | ResourceClassification);
               setVisibleLimit(PAGE_SIZE);
             }}
-            className="px-2.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+            className="min-h-[44px] px-2.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] cursor-pointer focus:outline-none focus:border-[var(--color-ink)]"
           >
             <option value="all">All Classifications</option>
             <option value="ESSENTIAL">ESSENTIAL</option>
@@ -157,7 +241,7 @@ export function ResourceLibraryView() {
               setLanguageFilter(e.target.value as 'all' | 'English' | 'Hindi');
               setVisibleLimit(PAGE_SIZE);
             }}
-            className="px-2.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+            className="min-h-[44px] px-2.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] cursor-pointer focus:outline-none focus:border-[var(--color-ink)]"
           >
             <option value="all">All Languages</option>
             <option value="English">English</option>
@@ -171,7 +255,7 @@ export function ResourceLibraryView() {
               setWatchFilter(e.target.value as 'all' | 'unwatched' | 'watched');
               setVisibleLimit(PAGE_SIZE);
             }}
-            className="px-2.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs text-[#0F172A]"
+            className="min-h-[44px] px-2.5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] text-xs font-mono text-[var(--color-ink)] cursor-pointer focus:outline-none focus:border-[var(--color-ink)]"
           >
             <option value="all">Watched &amp; Unwatched</option>
             <option value="unwatched">Unwatched only</option>
@@ -179,7 +263,7 @@ export function ResourceLibraryView() {
           </select>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-[#64748B] pt-1">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-[var(--color-secondary)] pt-1 border-t border-[var(--color-line-soft)]">
           <span className="tabular-nums">
             Showing {displayed.length} of {filtered.length} matching resources
           </span>
@@ -200,7 +284,7 @@ export function ResourceLibraryView() {
                 setWatchFilter('all');
                 setVisibleLimit(PAGE_SIZE);
               }}
-              className="text-[#2563EB] hover:text-[#1D4ED8] font-medium cursor-pointer"
+              className="min-h-[44px] text-[var(--color-ink)] underline hover:no-underline font-semibold cursor-pointer inline-flex items-center"
             >
               Clear filters
             </button>
@@ -209,9 +293,9 @@ export function ResourceLibraryView() {
       </SectionCard>
 
       {/* Catalogue List */}
-      <SectionCard className="divide-y divide-[#F1F5F9]">
+      <SectionCard className="border border-[var(--color-line)] bg-[var(--color-surface)] divide-y divide-[var(--color-line-soft)]">
         {displayed.length === 0 ? (
-          <div className="p-10 text-center text-sm text-[#64748B]">
+          <div className="p-10 text-center text-sm font-mono text-[var(--color-secondary)]">
             No verified resources match your filters.
           </div>
         ) : (
@@ -228,24 +312,24 @@ export function ResourceLibraryView() {
             return (
               <div
                 key={item.id}
-                className="p-4 flex flex-col lg:flex-row lg:items-start justify-between gap-3"
+                className="p-4 sm:p-5 flex flex-col lg:flex-row lg:items-start justify-between gap-3"
               >
-                <div className="space-y-1 min-w-0 flex-1">
+                <div className="space-y-1.5 min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <ClassificationTag value={cls} />
                     <LanguageTag language={item.language} />
-                    <span className="text-[11px] font-medium text-[#64748B]">
+                    <span className="text-[11px] font-mono text-[var(--color-secondary)]">
                       Tier {item.priorityTier} · {item.courseName}
                     </span>
                     {item.mappedWeeks.length > 0 && (
-                      <span className="text-[11px] text-[#2563EB] font-medium tabular-nums">
+                      <span className="text-[11px] font-mono text-[var(--color-ink)] font-semibold tabular-nums">
                         Weeks: {item.mappedWeeks.join(', ')}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm font-medium text-[#0F172A]">{item.title}</p>
-                  <p className="text-xs text-[#475569]">{item.reason}</p>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[#64748B]">
+                  <p className="text-sm font-medium text-[var(--color-ink)] break-words leading-snug">{item.title}</p>
+                  <p className="text-xs text-[var(--color-secondary)] break-words leading-relaxed">{item.reason}</p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono text-[var(--color-secondary)]">
                     <span>{item.sectionName}</span>
                     <span>·</span>
                     <span>{item.locator}</span>
@@ -256,36 +340,36 @@ export function ResourceLibraryView() {
                       </>
                     )}
                     {item.filePath && (
-                      <span className="inline-flex items-center gap-1 font-mono text-[11px] text-[#475569]">
-                        <FolderOpen className="w-3 h-3 text-[#94A3B8]" />
-                        {item.filePath}
+                      <span className="inline-flex items-center gap-1 font-mono text-[11px] text-[var(--color-secondary)] break-all">
+                        <FolderOpen className="w-3 h-3 text-[var(--color-secondary)] shrink-0" />
+                        <span>{item.filePath}</span>
                       </span>
                     )}
                     {!item.verified && (
-                      <span className="text-[#B45309] font-medium">
-                        UNVERIFIED (compressed archive contents not indexed)
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)] border border-[var(--color-line)] bg-[var(--color-sunken)] px-1 py-0.5">
+                        UNVERIFIED archive contents
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] text-xs font-medium text-[#334155] cursor-pointer whitespace-nowrap shrink-0">
+                <div className="flex items-center gap-2 shrink-0 self-start lg:self-center">
+                  <label className="min-h-[44px] min-w-[44px] inline-flex items-center gap-2 px-3 py-1.5 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono text-[var(--color-ink)] cursor-pointer select-none transition-colors">
                     <input
                       type="checkbox"
                       checked={watched}
                       onChange={() => toggleResourceWatched(item.id, targetPinWeek)}
-                      className="h-3.5 w-3.5 rounded border-[#CBD5E1] text-[#2563EB]"
+                      className="h-4 w-4 rounded-none border border-[var(--color-line)] accent-[var(--color-ink)]"
                     />
                     <span>Watched</span>
                   </label>
                   <button
                     type="button"
                     onClick={() => pinResourceToWeek(item.id, targetPinWeek, item.title)}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md border text-xs font-medium whitespace-nowrap shrink-0 cursor-pointer ${
+                    className={`min-h-[44px] min-w-[44px] inline-flex items-center gap-1.5 px-3 py-1.5 border text-xs font-mono font-medium whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
                       isPinned
-                        ? 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1D4ED8]'
-                        : 'bg-white border-[#E2E8F0] text-[#475569] hover:bg-[#F8FAFC]'
+                        ? 'border border-[var(--color-ink)] bg-[var(--color-sunken)] text-[var(--color-ink)] font-bold'
+                        : 'border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-[var(--color-secondary)] hover:text-[var(--color-ink)]'
                     }`}
                   >
                     <Pin className="w-3.5 h-3.5" />
@@ -299,11 +383,11 @@ export function ResourceLibraryView() {
       </SectionCard>
 
       {visibleLimit < filtered.length && (
-        <div className="text-center">
+        <div className="text-center pt-2">
           <button
             type="button"
             onClick={() => setVisibleLimit((v) => v + PAGE_SIZE)}
-            className="px-4 py-2 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] text-sm font-medium text-[#0F172A] cursor-pointer"
+            className="min-h-[44px] px-5 py-2 border border-[var(--color-line)] bg-[var(--color-surface)] hover:bg-[var(--color-sunken)] text-xs font-mono font-medium text-[var(--color-ink)] cursor-pointer transition-colors"
           >
             Load more ({filtered.length - visibleLimit} remaining)
           </button>
